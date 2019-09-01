@@ -1,7 +1,7 @@
 let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
-let UserSchema = new Schema({
+let AccountSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -27,17 +27,9 @@ let UserSchema = new Schema({
     avatar: {
         type: String
     },
-    salary: {
-        type: Number
-    },
-    role: {
-        type: Schema.Types.ObjectId,
-        ref: "account"
-    },
     date_create: {
         type: Date,
         default: Date.now
     }
 });
-
-module.exports = User = mongoose.model("user", UserSchema);
+module.exports = Account = mongoose.model("account", AccountSchema);

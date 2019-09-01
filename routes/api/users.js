@@ -6,7 +6,7 @@ const config = require("config");
 const bcrypt = require("bcryptjs");
 const { check, validationResult } = require("express-validator");
 
-const User = require("../../models/User");
+const User = require("../../models/Member");
 const Role = require("../../models/Role");
 
 // @route   POST api/users
@@ -23,9 +23,6 @@ router.post(
             "password",
             "Please enter a password with 6 characters or more"
         ).isLength({ min: 6 }),
-        check("address", "Address is required")
-            .not()
-            .isEmpty(),
         check("phone", "Please include a valid phone").isLength({
             min: 10,
             max: 15
