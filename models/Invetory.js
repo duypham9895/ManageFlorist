@@ -10,15 +10,16 @@ let InventorySchema = new Schema({
         type: Number,
         required: true
     },
-    expiration_date: {
+    expirationDate: {
         type: Date
     },
-    receipt_date: {
+    receiptDate: {
         type: Date,
         default: Date.now
     },
     isDamage: {
-        type: Boolean
+        type: Boolean,
+        default: false
     }
 });
 module.exports = Inventory = mongoose.model("inventory", InventorySchema);

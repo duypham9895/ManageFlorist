@@ -4,17 +4,18 @@ let Schema = mongoose.Schema;
 let DiscountSchema = new Schema({
     code: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     event: {
         type: String,
         required: true
     },
-    start_date: {
+    startDate: {
         type: Date,
         required: true
     },
-    end_date: {
+    endDate: {
         type: Date,
         required: true
     }

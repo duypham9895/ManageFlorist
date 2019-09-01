@@ -5,23 +5,23 @@ const { check, validationResult } = require("express-validator");
 
 const Account = require("../../models/Account");
 const Member = require("../../models/Member");
-const Role = require("../../models/Role");
+const Supplier = require("../../models/Supplier");
 
-// @route   POST api/role
-// @desc    Create role
+// @route   POST api/supplier
+// @desc    Create supplier
 // @access  Private
 router.post(
     "/",
     [
         auth,
-        check("name", "Name of Role is required")
+        check("name", "Name is required")
             .not()
             .isEmpty(),
-        check("code", "Please include a valid code").isLength({
+        check("phone", "Please include a valid phone").isLength({
             min: 10,
             max: 15
         }),
-        check("qty", "Qty is required")
+        check("address", "Address is required")
             .not()
             .isEmpty()
     ],
@@ -30,7 +30,8 @@ router.post(
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        const { code, qty, name } = req.body;
+
+        const { name, address, phone } = req.body;
 
         let account = await Account.findById(req.account.id);
         let member = await Member.findOne({ account: account.id });
@@ -44,35 +45,57 @@ router.post(
 
         let findRole = await Role.findById(member.role);
 
-        if (findRole.name !== "ADMIN") {
+        if (findRole.name === "STAFF") {
             return res
                 .status(401)
                 .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
         }
 
         try {
-            let role = await Role.findOne({ code });
-
-            if (role) {
-                return res
-                    .status(400)
-                    .json({ errors: [{ msg: "Role already exists" }] });
+            let supplier = await Supplier.findOne({ name, phone });
+            if (supplier) {
+                return res.status(400).json({
+                    errors: [{ msg: "This Category already exists" }]
+                });
             }
 
-            role = new Role({
+            supplier = new Supplier({
                 name,
-                code,
-                qty
+                phone,
+                address
             });
 
-            await role.save();
+            await supplier.save();
 
-            res.json(role);
+            res.json(supplier);
         } catch (error) {
             console.error(error);
             res.status(500).send("Server error");
         }
     }
 );
+
+// @route    GET api/supplier
+// @desc     Get all supplier
+// @access   Private
+router.get("/", auth, async (req, res) => {
+    let account = await Account.findById(req.account.id);
+    let member = await Member.findOne({ account: account.id });
+
+    // Check if account is not member
+    if (!member) {
+        return res
+            .status(401)
+            .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
+    }
+
+    try {
+        const supplies = await Supplier.find().sort({ date: -1 });
+        res.json(supplies);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Server error");
+    }
+});
 
 module.exports = router;

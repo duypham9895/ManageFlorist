@@ -4,7 +4,8 @@ let Schema = mongoose.Schema;
 let ProductSchema = new Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     description: {
         type: String
@@ -16,11 +17,11 @@ let ProductSchema = new Schema({
             }
         }
     ],
-    import_price: {
+    importPrice: {
         type: Number,
         required: true
     },
-    selling_price: {
+    sellingPrice: {
         type: Number,
         required: true
     },

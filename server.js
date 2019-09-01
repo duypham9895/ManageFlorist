@@ -12,9 +12,18 @@ app.use(express.json({ extended: false }));
 app.get("/", (req, res) => res.send("API Running"));
 
 // Define routes
+// /// About Auth & User
 app.use("/api/users", require("./routes/api/users"));
 app.use("/api/auth", require("./routes/api/auth"));
 app.use("/api/role", require("./routes/api/role"));
+
+// /// About product & inventory
+app.use("/api/category", require("./routes/api/category"));
+app.use("/api/supplier", require("./routes/api/supplier"));
+app.use("/api/product", require("./routes/api/product"));
+
+// /// About discount
+app.use("/api/discount", require("./routes/api/discount"));
 
 const PORT = process.env.PORT || 3001;
 

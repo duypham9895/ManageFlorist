@@ -85,13 +85,23 @@ router.post(
             let role = await Role.findOne({ code });
 
             if (role) {
+                if (role.qty <= 0) {
+                    return res.status(400).json({
+                        errors: [
+                            {
+                                msg: "Your Code is Expired"
+                            }
+                        ]
+                    });
+                }
+
                 let member = await Member.findOne({ account: account.id });
                 // check if account member's exists
                 if (member) {
                     return res.status(400).json({
                         errors: [
                             {
-                                msg: "Your Account already exists"
+                                msg: "Your Account already Exists"
                             }
                         ]
                     });
