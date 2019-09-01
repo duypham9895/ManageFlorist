@@ -3,6 +3,8 @@ const router = express.Router();
 const auth = require("../../middleware/auth");
 const { check, validationResult } = require("express-validator");
 
+const Account = require("../../models/Account");
+const Member = require("../../models/Member");
 const Role = require("../../models/Role");
 
 // @route   POST api/role
@@ -28,9 +30,19 @@ router.post(
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
+        const { code, qty, name } = req.body;
 
-        let user = await User.findById(req.user.id);
-        let findRole = await Role.findById(user.role);
+        let account = await Account.findById(req.account.id);
+        let member = await Member.findOne({ account: account.id });
+
+        // Check if account is not member
+        if (!member) {
+            return res
+                .status(401)
+                .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
+        }
+
+        let findRole = await Role.findById(member.role);
 
         if (findRole.name !== "ADMIN") {
             return res

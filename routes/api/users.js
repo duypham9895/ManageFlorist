@@ -6,7 +6,9 @@ const config = require("config");
 const bcrypt = require("bcryptjs");
 const { check, validationResult } = require("express-validator");
 
-const User = require("../../models/Member");
+const Account = require("../../models/Account");
+const Member = require("../../models/Member");
+const Customer = require("../../models/Customer");
 const Role = require("../../models/Role");
 
 // @route   POST api/users
@@ -26,10 +28,7 @@ router.post(
         check("phone", "Please include a valid phone").isLength({
             min: 10,
             max: 15
-        }),
-        check("code", "Code is required")
-            .not()
-            .isEmpty()
+        })
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -37,16 +36,23 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { name, email, password, address, phone, code } = req.body;
+        const {
+            name,
+            email,
+            password,
+            phone,
+            code,
+            birthday,
+            address
+        } = req.body;
         try {
-            let user = await User.findOne({ email });
-            let role = await Role.findOne({ code });
+            let account = await Account.findOne({ email });
 
-            if (user || !role) {
+            if (account) {
                 return res.status(400).json({
                     errors: [
                         {
-                            msg: "User already exists or Your code is invalid"
+                            msg: "Account already exists"
                         }
                     ]
                 });
@@ -58,29 +64,67 @@ router.post(
                 d: "mm"
             });
 
-            user = new User({
+            account = new Account({
                 name,
                 email,
                 password,
-                address,
                 phone,
-                role
+                code,
+                birthday,
+                address
             });
 
             const salt = await bcrypt.genSalt(10);
 
-            user.password = await bcrypt.hash(password, salt);
+            account.password = await bcrypt.hash(password, salt);
 
-            delete user.password;
+            delete account.password;
 
-            role.qty -= 1;
+            await account.save();
 
-            await role.save();
-            await user.save();
+            let role = await Role.findOne({ code });
+
+            if (role) {
+                let member = await Member.findOne({ account: account.id });
+                // check if account member's exists
+                if (member) {
+                    return res.status(400).json({
+                        errors: [
+                            {
+                                msg: "Your Account already exists"
+                            }
+                        ]
+                    });
+                }
+                member = new Member({
+                    account: account.id,
+                    role: role.id
+                });
+
+                await member.save();
+            } else {
+                let customer = await Customer.findOne({ account: account.id });
+                // check if account customer's exists
+                if (customer) {
+                    return res.status(400).json({
+                        errors: [
+                            {
+                                msg: "Your Account already exists"
+                            }
+                        ]
+                    });
+                }
+
+                customer = new Customer({
+                    account: account.id
+                });
+
+                await customer.save();
+            }
 
             const payload = {
-                user: {
-                    id: user.id
+                account: {
+                    id: account.id
                 }
             };
 

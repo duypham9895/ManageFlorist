@@ -16,8 +16,7 @@ let AccountSchema = new Schema({
         required: true
     },
     address: {
-        type: String,
-        required: true
+        type: String
     },
     phone: {
         type: String,

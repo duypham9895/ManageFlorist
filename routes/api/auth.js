@@ -6,15 +6,17 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { check, validationResult } = require("express-validator");
 
-const User = require("../../models/Member");
+const Account = require("../../models/Account");
 
 // @route   GET api/auth
 // @desc    Test route
 // @access  Public
 router.get("/", auth, async (req, res) => {
     try {
-        const user = await User.findById(req.user.id).select("-password");
-        res.json(user);
+        const account = await Account.findById(req.account.id).select(
+            "-password"
+        );
+        res.json(account);
     } catch (error) {
         console.error(error.message);
         res.status(500).send("Server Error");
@@ -22,7 +24,7 @@ router.get("/", auth, async (req, res) => {
 });
 
 // @route   POST api/auth
-// @desc    Authenticate user & get token
+// @desc    Authenticate account & get token
 // @access  Public
 router.post(
     "/",
@@ -38,15 +40,15 @@ router.post(
 
         const { email, password } = req.body;
         try {
-            let user = await User.findOne({ email });
+            let account = await Account.findOne({ email });
 
-            if (!user) {
+            if (!account) {
                 return res
                     .status(400)
                     .json({ errors: [{ msg: "Invalid Credentials" }] });
             }
 
-            const isMatch = await bcrypt.compare(password, user.password);
+            const isMatch = await bcrypt.compare(password, account.password);
 
             if (!isMatch) {
                 return res
@@ -55,8 +57,8 @@ router.post(
             }
 
             const payload = {
-                user: {
-                    id: user.id
+                account: {
+                    id: account.id
                 }
             };
 
