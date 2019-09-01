@@ -6,7 +6,7 @@ let RoleSchema = new Schema({
         type: String,
         required: true
     },
-    role: {
+    name: {
         type: String,
         required: true
     },

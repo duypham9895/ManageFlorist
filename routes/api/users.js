@@ -6,10 +6,11 @@ const config = require("config");
 const bcrypt = require("bcryptjs");
 const { check, validationResult } = require("express-validator");
 
-const Account = require("../../models/Account");
+const User = require("../../models/User");
+const Role = require("../../models/Role");
 
-// @route   POST api/account
-// @desc    Register account
+// @route   POST api/users
+// @desc    Register user
 // @access  Public
 router.post(
     "/",
@@ -28,7 +29,10 @@ router.post(
         check("phone", "Please include a valid phone").isLength({
             min: 10,
             max: 15
-        })
+        }),
+        check("code", "Code is required")
+            .not()
+            .isEmpty()
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -36,14 +40,19 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { name, email, password, address, phone } = req.body;
+        const { name, email, password, address, phone, code } = req.body;
         try {
-            let user = await Account.findOne({ email });
+            let user = await User.findOne({ email });
+            let role = await Role.findOne({ code });
 
-            if (user) {
-                return res
-                    .status(400)
-                    .json({ errors: [{ msg: "User already exists" }] });
+            if (user || !role) {
+                return res.status(400).json({
+                    errors: [
+                        {
+                            msg: "User already exists or Your code is invalid"
+                        }
+                    ]
+                });
             }
 
             const avatar = gravatar.url(email, {
@@ -52,12 +61,13 @@ router.post(
                 d: "mm"
             });
 
-            user = new Account({
+            user = new User({
                 name,
                 email,
                 password,
                 address,
-                phone
+                phone,
+                role
             });
 
             const salt = await bcrypt.genSalt(10);
@@ -66,10 +76,13 @@ router.post(
 
             delete user.password;
 
+            role.qty -= 1;
+
+            await role.save();
             await user.save();
 
             const payload = {
-                account: {
+                user: {
                     id: user.id
                 }
             };
@@ -77,7 +90,7 @@ router.post(
             jwt.sign(
                 payload,
                 config.get("jwtSecret"),
-                { expiresIn: 3600 },
+                { expiresIn: 360000 },
                 (err, token) => {
                     if (err) throw err;
                     res.json({ token });
