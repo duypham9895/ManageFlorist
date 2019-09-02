@@ -11,7 +11,7 @@ const Inventory = require("../../models/Invetory");
 const Product = require("../../models/Product");
 
 // @route   POST api/product
-// @desc    Create product & add this to inventory
+// @desc    Create/Update Product & add this to Inventory
 // @access  Private
 router.post(
     "/",
@@ -75,25 +75,32 @@ router.post(
             });
         }
 
+        // Build product object
+        const productFields = {};
+        if (name) productFields.name = name;
+        if (description) productFields.description = description;
+        if (images) productFields.images = images;
+        if (importPrice) productFields.importPrice = importPrice;
+        if (sellingPrice) productFields.sellingPrice = sellingPrice;
+        if (expired) productFields.expired = expired;
+        if (category) productFields.category = name;
+        if (supplier) productFields.supplier = name;
+
         try {
             let product = await Product.findOne({ name });
 
             if (product) {
-                return res.status(400).json({
-                    errors: [{ msg: "This Product already exists" }]
-                });
+                // Update
+                product = await Product.findOneAndUpdate(
+                    { name: name },
+                    { $set: productFields },
+                    { new: true }
+                );
+
+                return res.json(product);
             }
 
-            product = new Product({
-                name,
-                description,
-                images,
-                importPrice,
-                sellingPrice,
-                expired,
-                category: findCategory.id,
-                supplier: findSupplier.id
-            });
+            product = new Product(productFields);
 
             await product.save();
 
