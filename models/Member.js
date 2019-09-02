@@ -3,14 +3,14 @@ let Schema = mongoose.Schema;
 
 let MemberSchema = new Schema({
     account: {
-        type: Schema.Types.ObjectId,
+        type: Schema.Types.Mixed,
         ref: "account"
     },
     salary: {
         type: Number
     },
     role: {
-        type: Schema.Types.ObjectId,
+        type: Schema.Types.Mixed,
         ref: "role"
     }
 });

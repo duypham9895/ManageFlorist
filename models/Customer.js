@@ -3,7 +3,7 @@ let Schema = mongoose.Schema;
 
 let CustomerSchema = new Schema({
     account: {
-        type: Schema.Types.ObjectId,
+        type: Schema.Types.Mixed,
         ref: "account"
     },
     point: {

@@ -5,6 +5,10 @@ let CategorySchema = new Schema({
     name: {
         type: String,
         required: true
+    },
+    isExists: {
+        type: Boolean,
+        default: true
     }
 });
 module.exports = Category = mongoose.model("category", CategorySchema);

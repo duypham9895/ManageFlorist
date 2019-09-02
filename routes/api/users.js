@@ -78,7 +78,7 @@ router.post(
 
             account.password = await bcrypt.hash(password, salt);
 
-            delete account.password;
+            delete password;
 
             await account.save();
 
@@ -107,8 +107,8 @@ router.post(
                     });
                 }
                 member = new Member({
-                    account: account.id,
-                    role: role.id
+                    account: account,
+                    role: role
                 });
 
                 await member.save();
@@ -126,7 +126,7 @@ router.post(
                 }
 
                 customer = new Customer({
-                    account: account.id
+                    account: account
                 });
 
                 await customer.save();

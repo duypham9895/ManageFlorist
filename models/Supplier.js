@@ -14,6 +14,10 @@ let SupplierSchema = new Schema({
     phone: {
         type: String,
         required: true
+    },
+    isExists: {
+        type: Boolean,
+        default: true
     }
 });
 

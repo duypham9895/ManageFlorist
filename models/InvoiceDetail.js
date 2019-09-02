@@ -3,11 +3,11 @@ let Schema = mongoose.Schema;
 
 let InvoiceDetailSchema = new Schema({
     invoice: {
-        type: Schema.Types.ObjectId,
+        type: Schema.Types.Mixed,
         ref: "invoice"
     },
     product: {
-        type: Schema.Types.ObjectId,
+        type: Schema.Types.Mixed,
         ref: "product"
     },
     qty: {

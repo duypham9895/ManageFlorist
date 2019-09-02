@@ -34,7 +34,7 @@ router.post(
         const { name, address, phone } = req.body;
 
         let account = await Account.findById(req.account.id);
-        let member = await Member.findOne({ account: account.id });
+        let member = await Member.findOne({ account });
 
         // Check if account is not member
         if (!member) {
@@ -43,9 +43,7 @@ router.post(
                 .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
         }
 
-        let findRole = await Role.findById(member.role);
-
-        if (findRole.name === "STAFF") {
+        if (member.role.name === "STAFF") {
             return res
                 .status(401)
                 .json({ errors: [{ msg: "Your Account is Unauthorized" }] });

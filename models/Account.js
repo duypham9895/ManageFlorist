@@ -29,6 +29,10 @@ let AccountSchema = new Schema({
     date_create: {
         type: Date,
         default: Date.now
+    },
+    isExists: {
+        type: Boolean,
+        default: true
     }
 });
 module.exports = Account = mongoose.model("account", AccountSchema);

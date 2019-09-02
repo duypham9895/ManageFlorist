@@ -7,7 +7,7 @@ const Account = require("../../models/Account");
 const Member = require("../../models/Member");
 const Supplier = require("../../models/Supplier");
 const Category = require("../../models/Category");
-const Inventory = require("../../models/Invetory");
+const Inventory = require("../../models/Inventory");
 const Product = require("../../models/Product");
 
 // @route   POST api/product
@@ -52,7 +52,7 @@ router.post(
         } = req.body;
 
         let account = await Account.findById(req.account.id);
-        let member = await Member.findOne({ account: account.id });
+        let member = await Member.findOne({ account });
 
         // Check if account is not member
         if (!member) {
@@ -73,34 +73,28 @@ router.post(
                     }
                 ]
             });
+        } else if (!findCategory.isExists || !findSupplier.isExists) {
+            return res.status(400).json({
+                errors: [
+                    {
+                        msg:
+                            "Information about Category or Supplier is not exists. Please check again"
+                    }
+                ]
+            });
         }
 
-        // Build product object
-        const productFields = {};
-        if (name) productFields.name = name;
-        if (description) productFields.description = description;
-        if (images) productFields.images = images;
-        if (importPrice) productFields.importPrice = importPrice;
-        if (sellingPrice) productFields.sellingPrice = sellingPrice;
-        if (expired) productFields.expired = expired;
-        if (category) productFields.category = name;
-        if (supplier) productFields.supplier = name;
-
         try {
-            let product = await Product.findOne({ name });
-
-            if (product) {
-                // Update
-                product = await Product.findOneAndUpdate(
-                    { name: name },
-                    { $set: productFields },
-                    { new: true }
-                );
-
-                return res.json(product);
-            }
-
-            product = new Product(productFields);
+            let product = new Product({
+                name,
+                description,
+                images,
+                importPrice,
+                sellingPrice,
+                expired,
+                category: findCategory,
+                supplier: findSupplier
+            });
 
             await product.save();
 
@@ -110,7 +104,7 @@ router.post(
 
             // // Add this product to inventory
             let inventory = new Inventory({
-                product: product.id,
+                product: product,
                 qty: qty,
                 expirationDate: expirationDate
             });
@@ -127,8 +121,8 @@ router.post(
 
 // @route    GET api/product
 // @desc     Get all product
-// @access   Public
-router.get("/", async (req, res) => {
+// @access   Private
+router.get("/", auth, async (req, res) => {
     try {
         const products = await Product.find().sort({ date: -1 });
         res.json(products);

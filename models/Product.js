@@ -30,12 +30,16 @@ let ProductSchema = new Schema({
         required: true
     },
     category: {
-        type: Schema.Types.ObjectId,
+        type: Schema.Types.Mixed,
         ref: "category"
     },
     supplier: {
-        type: Schema.Types.ObjectId,
+        type: Schema.Types.Mixed,
         ref: "supplier"
+    },
+    isExists: {
+        type: Boolean,
+        default: true
     }
 });
 module.exports = Product = mongoose.model("product", ProductSchema);

@@ -3,11 +3,11 @@ let Schema = mongoose.Schema;
 
 let InvoiceSchema = new Schema({
     employee: {
-        type: Schema.Types.ObjectId,
+        type: Schema.Types.Mixed,
         ref: "member"
     },
     customer: {
-        type: Schema.Types.ObjectId,
+        type: Schema.Types.Mixed,
         ref: "customer"
     },
     total: {
@@ -19,7 +19,7 @@ let InvoiceSchema = new Schema({
         default: Date.now
     },
     discount: {
-        type: Schema.Types.ObjectId,
+        type: Schema.Types.Mixed,
         ref: "discount"
     }
 });

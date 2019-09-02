@@ -3,7 +3,7 @@ let Schema = mongoose.Schema;
 
 let InventorySchema = new Schema({
     product: {
-        type: Schema.Types.ObjectId,
+        type: Schema.Types.Mixed,
         ref: "product"
     },
     qty: {
