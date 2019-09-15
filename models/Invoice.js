@@ -2,7 +2,7 @@ let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
 let InvoiceSchema = new Schema({
-    employee: {
+    member: {
         type: Schema.Types.Mixed,
         ref: "member"
     },
@@ -12,7 +12,7 @@ let InvoiceSchema = new Schema({
     },
     total: {
         type: Number,
-        required: true
+        default: 0
     },
     date: {
         type: Date,

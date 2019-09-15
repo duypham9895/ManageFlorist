@@ -23,6 +23,9 @@ router.post(
         }),
         check("address", "Address is required")
             .not()
+            .isEmpty(),
+        check("_id", "ID is required")
+            .not()
             .isEmpty()
     ],
     async (req, res) => {
@@ -31,7 +34,7 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { name, address, phone } = req.body;
+        const { _id, name, address, phone } = req.body;
 
         let account = await Account.findById(req.account.id);
         let member = await Member.findOne({ account });
@@ -50,14 +53,15 @@ router.post(
         }
 
         try {
-            let supplier = await Supplier.findOne({ name, phone });
+            let supplier = await Supplier.findOne({ _id, name, phone });
             if (supplier) {
                 return res.status(400).json({
-                    errors: [{ msg: "This Category already exists" }]
+                    errors: [{ msg: "This Supplier already exists" }]
                 });
             }
 
             supplier = new Supplier({
+                _id,
                 name,
                 phone,
                 address

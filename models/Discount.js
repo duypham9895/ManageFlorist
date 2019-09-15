@@ -7,6 +7,10 @@ let DiscountSchema = new Schema({
         required: true,
         unique: true
     },
+    percent: {
+        type: Number,
+        required: true
+    },
     event: {
         type: String,
         required: true

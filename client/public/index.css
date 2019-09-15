@@ -1,0 +1,163 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+    box-sizing: border-box;
+}
+
+.m-1 {
+    margin: 1rem;
+}
+
+.my-1 {
+    margin: 1rem 0;
+}
+
+.p-1 {
+    padding: 1rem;
+}
+
+.py-1 {
+    padding: 1rem 0;
+}
+
+.m-2 {
+    margin: 2rem;
+}
+
+.my-2 {
+    margin: 2rem 0;
+}
+
+.p-2 {
+    padding: 2rem;
+}
+
+.py-2 {
+    padding: 2rem 0;
+}
+
+.m-3 {
+    margin: 3rem;
+}
+
+.my-3 {
+    margin: 3rem 0;
+}
+
+.p-3 {
+    padding: 3rem;
+}
+
+.py-3 {
+    padding: 3rem 0;
+}
+
+.m-4 {
+    margin: 4rem;
+}
+
+.my-4 {
+    margin: 4rem 0;
+}
+
+.p-4 {
+    padding: 4rem;
+}
+
+.py-4 {
+    padding: 4rem 0;
+}
+
+.m-5 {
+    margin: 5rem;
+}
+
+.my-5 {
+    margin: 5rem 0;
+}
+
+.p-5 {
+    padding: 5rem;
+}
+
+.py-5 {
+    padding: 5rem 0;
+}
+
+a {
+    text-decoration: none;
+    color: #17a2b8;
+}
+
+.bigBox {
+    border-radius: 100px 0 100px 0;
+    height: 100vh;
+}
+
+.leftBox {
+    width: 70%;
+    height: 100%;
+    float: left;
+    background: url("./images/annie-spratt-KQ6sO8m1ZDE-unsplash.jpg");
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover;
+}
+
+.rightBox {
+    width: 30%;
+    height: 100%;
+    float: right;
+    background: #f7f7f7;
+}
+
+.form input[type='text'],
+.form input[type='email'],
+.form input[type='password'],
+.form input[type='date'],
+/* .form input, */
+.form select,
+.form textarea {
+    display: block;
+    font: inherit;
+    width: 100%;
+    height: 3.5rem;
+    padding: 0.7rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.login-form {
+    padding: 173px 55px 55px 55px;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn {
+    display: inline-block;
+    background-color: #f4f4f4;
+    color: #333;
+    padding: 0.3rem 1.3rem;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    margin-right: 0.5rem;
+    outline: none;
+    -webkit-transition: all 0.2s ease-in;
+    transition: all 0.2s ease-in;
+    font: inherit;
+}
+
+.btn-login {
+    width: 100%;
+    height: 60px;
+    color: white;
+    background: #17a2b8;
+    border-radius: 10px;
+}
+
+.bold {
+    font: bold;
+}

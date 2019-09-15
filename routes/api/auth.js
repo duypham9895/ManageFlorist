@@ -29,7 +29,9 @@ router.get("/", auth, async (req, res) => {
 router.post(
     "/",
     [
-        check("email", "Please include a valid email").isEmail(),
+        check("username", "Please include a valid username")
+            .not()
+            .isEmpty(),
         check("password", "Password is required ").exists()
     ],
     async (req, res) => {
@@ -38,22 +40,28 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { email, password } = req.body;
+        const { username, password } = req.body;
         try {
-            let account = await Account.findOne({ email });
+            let findEmail = await Account.findOne({ email: username });
+            let findPhone = await Account.findOne({ phone: username });
 
-            if (!account) {
+            if (!findEmail && !findPhone) {
                 return res
                     .status(400)
-                    .json({ errors: [{ msg: "Invalid Credentials" }] });
+                    .json({ errors: [{ msg: "Invalid Credentials ep" }] });
             }
+
+            let account;
+
+            if (findEmail) account = findEmail;
+            if (findPhone) account = findPhone;
 
             const isMatch = await bcrypt.compare(password, account.password);
 
             if (!isMatch) {
                 return res
                     .status(400)
-                    .json({ errors: [{ msg: "Invalid Credentials" }] });
+                    .json({ errors: [{ msg: "Invalid Credentials m" }] });
             }
 
             const payload = {

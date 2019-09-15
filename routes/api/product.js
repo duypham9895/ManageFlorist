@@ -11,12 +11,15 @@ const Inventory = require("../../models/Inventory");
 const Product = require("../../models/Product");
 
 // @route   POST api/product
-// @desc    Create/Update Product & add this to Inventory
+// @desc    Create Product & add this to Inventory
 // @access  Private
 router.post(
     "/",
     [
         auth,
+        check("_id", "ID is required")
+            .not()
+            .isEmpty(),
         check("name", "Name is required")
             .not()
             .isEmpty(),
@@ -40,6 +43,7 @@ router.post(
         }
 
         const {
+            _id,
             name,
             description,
             images,
@@ -85,7 +89,10 @@ router.post(
         }
 
         try {
+            // let product = await Product.findOne({_id:id})
+
             let product = new Product({
+                _id,
                 name,
                 description,
                 images,

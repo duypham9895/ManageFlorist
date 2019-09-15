@@ -3,6 +3,7 @@ let Schema = mongoose.Schema;
 
 let SupplierSchema = new Schema({
     // name, address, phone
+    _id: String,
     name: {
         type: String,
         required: true

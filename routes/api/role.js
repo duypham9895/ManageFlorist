@@ -33,13 +33,13 @@ router.post(
         const { code, qty, name } = req.body;
 
         let account = await Account.findById(req.account.id);
-        let member = await Member.findOne({ account: account.id });
+        let member = await Member.findOne({ account: account });
 
         // Check if account is not member
         if (!member) {
             return res
                 .status(401)
-                .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
+                .json({ errors: [{ msg: "Your Account is Unauthorized a" }] });
         }
 
         let findRole = await Role.findById(member.role);
@@ -47,7 +47,7 @@ router.post(
         if (findRole.name !== "ADMIN") {
             return res
                 .status(401)
-                .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
+                .json({ errors: [{ msg: "Your Account is Unauthorized b" }] });
         }
 
         try {

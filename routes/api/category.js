@@ -16,6 +16,9 @@ router.post(
         auth,
         check("name", "Name is required")
             .not()
+            .isEmpty(),
+        check("_id", "ID is required")
+            .not()
             .isEmpty()
     ],
     async (req, res) => {
@@ -24,7 +27,7 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { name } = req.body;
+        const { _id, name } = req.body;
 
         let account = await Account.findById(req.account.id);
         let member = await Member.findOne({ account });
@@ -44,7 +47,7 @@ router.post(
         }
 
         try {
-            let category = await Category.findOne({ name });
+            let category = await Category.findOne({ _id });
 
             if (category) {
                 return res.status(400).json({
@@ -53,6 +56,7 @@ router.post(
             }
 
             category = new Category({
+                _id,
                 name
             });
 

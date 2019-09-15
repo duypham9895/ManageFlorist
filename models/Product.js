@@ -2,10 +2,10 @@ let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
 let ProductSchema = new Schema({
+    _id: String,
     name: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     description: {
         type: String
