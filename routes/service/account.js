@@ -9,13 +9,26 @@ const Role = require("../../models/Role");
 exports.create = async function(account) {
     const { name, email, password, phone, code, birthday, address } = account;
     try {
-        let account = await Account.findOne({ email });
+        let findEmail = await Account.findOne({ email: email });
+        let findPhone = await Account.findOne({ phone: phone });
 
-        if (account) {
+        if (findEmail) {
             return res.status(400).json({
                 errors: [
                     {
-                        msg: "Account already exists"
+                        param: "email",
+                        msg: "Your email was existed"
+                    }
+                ]
+            });
+        }
+
+        if (findPhone) {
+            return res.status(400).json({
+                errors: [
+                    {
+                        param: "phone",
+                        msg: "Your phone was existed"
                     }
                 ]
             });

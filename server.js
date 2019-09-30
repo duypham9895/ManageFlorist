@@ -31,6 +31,6 @@ app.use("/api/discount", require("./routes/api/discount"));
 // /// About invoice
 app.use("/api/invoice", require("./routes/api/invoice"));
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 4949;
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

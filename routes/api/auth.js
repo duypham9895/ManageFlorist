@@ -32,7 +32,9 @@ router.post(
         check("username", "Please include a valid username")
             .not()
             .isEmpty(),
-        check("password", "Password is required ").exists()
+        check("password", "Password is required ")
+            .not()
+            .isEmpty()
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -46,9 +48,9 @@ router.post(
             let findPhone = await Account.findOne({ phone: username });
 
             if (!findEmail && !findPhone) {
-                return res
-                    .status(400)
-                    .json({ errors: [{ msg: "Invalid Credentials ep" }] });
+                return res.status(400).json({
+                    errors: [{ msg: "Your account does not exist." }]
+                });
             }
 
             let account;
@@ -59,9 +61,9 @@ router.post(
             const isMatch = await bcrypt.compare(password, account.password);
 
             if (!isMatch) {
-                return res
-                    .status(400)
-                    .json({ errors: [{ msg: "Invalid Credentials m" }] });
+                return res.status(400).json({
+                    errors: [{ msg: "Your username or password incorrect" }]
+                });
             }
 
             const payload = {
@@ -74,9 +76,13 @@ router.post(
                 payload,
                 config.get("jwtSecret"),
                 { expiresIn: 360000 },
-                (err, token) => {
+                async (err, token) => {
                     if (err) throw err;
-                    res.json({ token });
+
+                    account.token = token;
+                    await account.save();
+
+                    return res.status(200).json(token);
                 }
             );
         } catch (error) {
@@ -85,5 +91,32 @@ router.post(
         }
     }
 );
+
+// @route   PUT api/auth
+// @desc    Check session
+// @access  Public
+router.put("/", async (req, res) => {
+    if (!req.body.token) {
+        return res.status(400).json({ msg: "Session token not found." });
+    }
+
+    jwt.verify(req.body.token, config.get("jwtSecret"), async (err, token) => {
+        if (!err) {
+            let id = token.account.id;
+            let account = await Account.findOne({ _id: id });
+
+            if (!account) {
+                return res.status(400).json({ msg: "User not found." });
+            }
+
+            if (account.token !== req.body.token) {
+                return res.status(400).json({ msg: "Invalid token" });
+            }
+            return res.status(200).send("ok");
+        } else {
+            return res.status(400).json({ msg: "Invalid token" });
+        }
+    });
+});
 
 module.exports = router;

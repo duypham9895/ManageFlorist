@@ -32,6 +32,9 @@ let AccountSchema = new Schema({
     isExists: {
         type: Boolean,
         default: true
+    },
+    token: {
+        type: String
     }
 });
 module.exports = Account = mongoose.model("account", AccountSchema);

@@ -5,6 +5,17 @@
     box-sizing: border-box;
 }
 
+:root {
+    --black: #24251f;
+    --primary: #4285f4;
+    --default: #8f8f8f;
+    --success: #34a853;
+    --error: #ea4335;
+    --light-grey: #dadce0;
+    --gg-gray: #f8f9fa;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
 .m-1 {
     margin: 1rem;
 }
@@ -85,6 +96,80 @@
     padding: 5rem 0;
 }
 
+/*TEXTS*/
+.text-black {
+    color: var(--black);
+}
+
+.text-primary {
+    color: var(--primary);
+}
+
+.text-error {
+    color: var(--error);
+}
+
+.text-default {
+    color: var(--default);
+}
+
+.text-success {
+    color: var(--success);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-bold {
+    font-weight: bold;
+}
+
+.text-nodec {
+    text-decoration: none !important;
+}
+
+.text-spacing {
+    word-spacing: 20px;
+}
+
+/* Alert */
+.alert {
+    padding: 0.5rem;
+    margin: 1rem;
+    opacity: 0.9;
+    background: #f4f4f4;
+    color: #333;
+}
+
+.alert.alert-primary {
+    background-color: #17a2b8;
+    color: #fff;
+}
+
+.alert.alert-dark {
+    background-color: #343a40;
+    color: #fff;
+}
+
+.alert.alert-success {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.alert.alert-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
 a {
     text-decoration: none;
     color: #17a2b8;
@@ -113,7 +198,9 @@ a {
 }
 
 .form input[type='text'],
+.form input[type='tel'],
 .form input[type='email'],
+.form input[type='username'],
 .form input[type='password'],
 .form input[type='date'],
 /* .form input, */
@@ -131,6 +218,12 @@ a {
 
 .login-form {
     padding: 173px 55px 55px 55px;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-form {
+    padding: 155px 55px 55px 55px;
     justify-content: center;
     align-items: center;
 }
@@ -160,4 +253,8 @@ a {
 
 .bold {
     font: bold;
+}
+
+.hidden {
+    display: none;
 }
