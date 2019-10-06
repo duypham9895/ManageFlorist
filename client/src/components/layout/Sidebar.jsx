@@ -26,13 +26,13 @@ class Navbar extends React.Component {
             // console.log(this.props);
             this.props.dispatch(logout());
         }
-
+        let temp;
         let active = { ...this.state.active };
-        for (var temp in active) {
+        for (temp in active) {
             active[temp] = "";
         }
 
-        for (var temp in active) {
+        for (temp in active) {
             if (temp === value) {
                 active[temp] = "active";
             }

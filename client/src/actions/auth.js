@@ -8,8 +8,7 @@ import {
     LOGIN_SUCCESS,
     LOGIN_FAIL,
     LOGIN_ERROR,
-    LOGOUT,
-    CLEAR_PROFILE
+    LOGOUT
 } from "./types";
 
 // Register User

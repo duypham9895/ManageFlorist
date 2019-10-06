@@ -8,7 +8,7 @@ class Category extends React.Component {
                 <section id="content-area">
                     <div className="col-md-12">
                         <div className="row">
-                            <a href="#" className="btn btn-green">
+                            <a href="/#" className="btn btn-green">
                                 + New Category
                             </a>
                         </div>
@@ -35,13 +35,13 @@ class Category extends React.Component {
                                             <div className="circle check"></div>
                                         </td>
                                         <td>
-                                            <a href="#">
+                                            <a href="/#">
                                                 <i className="far fa-eye"></i>
                                             </a>
-                                            <a href="#">
+                                            <a href="/#">
                                                 <i className="fas fa-edit"></i>
                                             </a>
-                                            <a href="#">
+                                            <a href="/#">
                                                 <i className="fas fa-trash-alt"></i>
                                             </a>
                                         </td>
@@ -54,13 +54,13 @@ class Category extends React.Component {
                                             <div className="circle uncheck"></div>
                                         </td>
                                         <td>
-                                            <a href="#">
+                                            <a href="/#">
                                                 <i className="far fa-eye"></i>
                                             </a>
-                                            <a href="#">
+                                            <a href="/#">
                                                 <i className="fas fa-edit"></i>
                                             </a>
-                                            <a href="#">
+                                            <a href="/#">
                                                 <i className="fas fa-trash-alt"></i>
                                             </a>
                                         </td>

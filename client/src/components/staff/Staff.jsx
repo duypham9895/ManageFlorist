@@ -8,7 +8,7 @@ class Staff extends React.Component {
                 <section id="content-area">
                     <div class="col-md-12">
                         <div class="row">
-                            <a href="#" class="btn btn-green">
+                            <a href="/#" class="btn btn-green">
                                 + New Supplier
                             </a>
                         </div>
@@ -50,13 +50,13 @@ class Staff extends React.Component {
                                         <td>2.99</td>
                                         <td>3.5</td>
                                         <td>
-                                            <a href="#">
+                                            <a href="/#">
                                                 <i class="far fa-eye"></i>
                                             </a>
-                                            <a href="#">
+                                            <a href="/#">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a href="#">
+                                            <a href="/#">
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>
                                         </td>
@@ -80,13 +80,13 @@ class Staff extends React.Component {
                                         <td>2.99</td>
                                         <td>3.5</td>
                                         <td>
-                                            <a href="#">
+                                            <a href="/#">
                                                 <i class="far fa-eye"></i>
                                             </a>
-                                            <a href="#">
+                                            <a href="/#">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a href="#">
+                                            <a href="/#">
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>
                                         </td>

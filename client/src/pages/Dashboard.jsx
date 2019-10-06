@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
-import { Redirect, Route, Switch, withRouter } from "react-router-dom";
+import { Redirect, Route, withRouter } from "react-router-dom";
 
 import Spinner from "../layout/Spinner";
 import Sidebar from "../components/layout/Sidebar.jsx";
@@ -16,9 +16,6 @@ import Staff from "../components/staff/Staff.jsx";
 import Profile from "../components/profile/Profile.jsx";
 
 class Dashboard extends React.Component {
-    constructor(props) {
-        super(props);
-    }
     render() {
         if (!this.props.auth.isAuthenticated) {
             return <Redirect to="/login" />;
