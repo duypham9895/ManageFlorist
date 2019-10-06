@@ -161,12 +161,13 @@ class RegisterPage extends React.Component {
                                 />
                             </div>
 
-                            <input
+                            <button
                                 type="submit"
-                                className=" my-1 btn btn-login bold"
-                                value="Register"
+                                className=" my-1 btn-handle btn-login bold"
                                 onClick={this.onSubmit.bind(this)}
-                            />
+                            >
+                                Register
+                            </button>
                             <p>
                                 Already have an account?{" "}
                                 <Link to="/login">Sign In</Link>

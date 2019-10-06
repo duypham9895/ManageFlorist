@@ -80,13 +80,13 @@ class LoginPage extends React.Component {
                                     onKeyUp={this.inputKeyUp.bind(this)}
                                 />
                             </div>
-
-                            <input
+                            <button
                                 type="submit"
-                                className=" my-1 btn btn-login bold"
-                                value="Login"
+                                className=" my-1 btn-handle btn-login bold"
                                 onClick={this.onSubmit.bind(this)}
-                            />
+                            >
+                                Login
+                            </button>
                             <p>
                                 Don't have an account{" "}
                                 <Link to="/register">Sign Up</Link>

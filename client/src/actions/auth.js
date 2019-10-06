@@ -113,7 +113,6 @@ export const checkSession = history => async dispatch => {
 // Logout / Clear Profile
 export const logout = () => dispatch => {
     dispatch({ type: LOGOUT });
-    dispatch({ type: CLEAR_PROFILE });
 };
 
 function setCookie(name, value, days) {

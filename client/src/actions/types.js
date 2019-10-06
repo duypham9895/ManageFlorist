@@ -9,6 +9,8 @@ export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAIL = "LOGIN_FAIL";
 export const LOGIN_ERROR = "LOGIN_ERROR";
 export const LOGOUT = "LOGOUT";
+export const GET_SUPPLIERS = "GET_SUPPLIERS";
+
 export const GET_PROFILE = "GET_PROFILE";
 export const GET_PROFILES = "GET_PROFILES";
 export const GET_REPOS = "GET_REPOS";

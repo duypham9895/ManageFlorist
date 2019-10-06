@@ -127,6 +127,7 @@ export default function(state = initialState, action) {
         case LOGIN_FAIL:
         case LOGOUT:
         case ACCOUNT_DELETED:
+            console.log("logout reducer");
             return {
                 ...state,
                 token: null,

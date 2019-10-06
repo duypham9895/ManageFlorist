@@ -56,8 +56,10 @@ router.post(
         } = req.body;
 
         let account = await Account.findById(req.account.id);
+        console.log("demo = ", req.account);
+        console.log("account = ", account);
         let member = await Member.findOne({ account });
-
+        console.log("member = ", member);
         // Check if account is not member
         if (!member) {
             return res

@@ -1,25 +1,68 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { connect } from "react-redux";
+import { Redirect, Route, Switch, withRouter } from "react-router-dom";
+
+import Spinner from "../layout/Spinner";
+import Sidebar from "../components/layout/Sidebar.jsx";
+
+import Home from "../components/dashboard/Home.jsx";
+import Category from "../components/category/Category.jsx";
+import Orders from "../components/orders/Orders.jsx";
+import Customer from "../components/customer/Customer.jsx";
+import Product from "../components/product/Product.jsx";
+import Supplier from "../components/supplier/Supplier.jsx";
+import Inventory from "../components/inventory/Inventory.jsx";
+import Staff from "../components/staff/Staff.jsx";
+import Profile from "../components/profile/Profile.jsx";
 
 class Dashboard extends React.Component {
+    constructor(props) {
+        super(props);
+    }
     render() {
-        console.log(this.props.token);
+        if (!this.props.auth.isAuthenticated) {
+            return <Redirect to="/login" />;
+        }
         return (
-            <div>
-                {this.props.token === null ? (
-                    <p>dashboard</p>
+            <Fragment>
+                {this.props.auth.loading ? (
+                    <Spinner />
                 ) : (
-                    <p>{"welcome " + this.props.token}</p>
+                    <Fragment>
+                        <Sidebar />
+                        <Route path="/dashboard/home" component={Home} />
+                        <Route path="/dashboard/order" component={Orders} />
+                        <Route
+                            path="/dashboard/customer"
+                            component={Customer}
+                        />
+                        <Route path="/dashboard/product" component={Product} />
+                        <Route
+                            path="/dashboard/category"
+                            component={Category}
+                        />
+
+                        <Route
+                            path="/dashboard/supplier"
+                            component={Supplier}
+                        />
+                        <Route
+                            path="/dashboard/inventory"
+                            component={Inventory}
+                        />
+                        <Route path="/dashboard/staff" component={Staff} />
+                        <Route path="/dashboard/profile" component={Profile} />
+                    </Fragment>
                 )}
-            </div>
+            </Fragment>
         );
     }
 }
 
 const mapStateToProps = store => {
     return {
-        token: store.auth.token
+        auth: store.auth
     };
 };
 
-export default connect(mapStateToProps)(Dashboard);
+export default withRouter(connect(mapStateToProps)(Dashboard));
