@@ -9,7 +9,7 @@ class Navbar extends React.Component {
         super(props);
         this.state = {
             active: {
-                dashboard: "active",
+                home: "",
                 orders: "",
                 customer: "",
                 product: "",
@@ -28,6 +28,7 @@ class Navbar extends React.Component {
         }
         let temp;
         let active = { ...this.state.active };
+
         for (temp in active) {
             active[temp] = "";
         }
@@ -42,6 +43,29 @@ class Navbar extends React.Component {
             active: active
         });
     }
+
+    componentDidMount() {
+        let str = this.props.location.pathname.split("/");
+        let target = str[str.length - 1];
+
+        if (this.state.active[target] === undefined) {
+            console.log(target);
+            this.setState({
+                active: {
+                    ...this.state.active,
+                    home: "active"
+                }
+            });
+
+            return;
+        }
+        this.setState({
+            active: {
+                ...this.state.active,
+                [target]: "active"
+            }
+        });
+    }
     render() {
         const active = this.state.active;
         return (
@@ -49,9 +73,9 @@ class Navbar extends React.Component {
                 <section id="sideMenu">
                     <nav>
                         <Link
-                            onClick={this.active.bind(this, "dashboard")}
-                            to="/dashboard"
-                            className={active.dashboard}
+                            onClick={this.active.bind(this, "home")}
+                            to="/dashboard/home"
+                            className={active.home}
                         >
                             <i className="fas fa-tachometer-alt"></i>Dashboard
                         </Link>

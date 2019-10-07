@@ -5,23 +5,23 @@ import { getSuppliers } from "../../actions/supplier";
 
 class Supplier extends React.Component {
     componentDidMount() {
-        this.props.dispatch(getSuppliers());
+        this.props.dispatch(getSuppliers(this.props.auth.token));
     }
     render() {
-        console.log(this.props.supplier.suppliers);
+        const suppliers = this.props.supplier.suppliers;
         return (
             <Fragment>
                 <section id="content-area">
-                    <div class="col-md-12">
-                        <div class="row">
-                            <a href="/#" class="btn btn-green">
+                    <div className="col-md-12">
+                        <div className="row">
+                            <a href="/#" className="btn btn-green">
                                 + New Supplier
                             </a>
                         </div>
                     </div>
 
-                    <div class="col-md-12">
-                        <div class="row">
+                    <div className="col-md-12">
+                        <div className="row">
                             <table>
                                 <thead>
                                     <tr>
@@ -34,46 +34,36 @@ class Supplier extends React.Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>ABC</td>
-                                        <td>HCM City</td>
-                                        <td>123456789</td>
-                                        <td>
-                                            <div class="circle check"></div>
-                                        </td>
-                                        <td>
-                                            <a href="/#">
-                                                <i class="far fa-eye"></i>
-                                            </a>
-                                            <a href="/#">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <a href="/#">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>XYZ</td>
-                                        <td>DaNang City</td>
-                                        <td>987654321</td>
-                                        <td>
-                                            <div class="circle uncheck"></div>
-                                        </td>
-                                        <td>
-                                            <a href="/#">
-                                                <i class="far fa-eye"></i>
-                                            </a>
-                                            <a href="/#">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <a href="/#">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
+                                    {suppliers.map((sup, key) => {
+                                        return (
+                                            <tr key={key}>
+                                                <td>{key + 1}</td>
+                                                <td>{sup.name}</td>
+                                                <td>{sup.address}</td>
+                                                <td>{sup.phone}</td>
+                                                <td>
+                                                    <div
+                                                        className={
+                                                            sup.isExists
+                                                                ? "circle check"
+                                                                : "circle uncheck"
+                                                        }
+                                                    ></div>
+                                                </td>
+                                                <td>
+                                                    <a href="/#">
+                                                        <i className="far fa-eye"></i>
+                                                    </a>
+                                                    <a href="/#">
+                                                        <i className="fas fa-edit"></i>
+                                                    </a>
+                                                    <a href="/#">
+                                                        <i className="fas fa-trash-alt"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
                                 </tbody>
                             </table>
                         </div>
@@ -86,7 +76,8 @@ class Supplier extends React.Component {
 
 const mapStateToProps = store => {
     return {
-        supplier: store.supplier
+        supplier: store.supplier,
+        auth: store.auth
     };
 };
 

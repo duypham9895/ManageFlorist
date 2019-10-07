@@ -72,6 +72,7 @@ exports.create = async function(account) {
             }
 
             let member = await Member.findOne({ account: account.id });
+
             // check if account member's exists
             if (member) {
                 return res.status(400).json({
@@ -87,6 +88,9 @@ exports.create = async function(account) {
                 role: role
             });
 
+            role.qty -= 1;
+
+            await role.save();
             await member.save();
         } else {
             let customer = await Customer.findOne({ account: account.id });

@@ -6,16 +6,16 @@ class Staff extends React.Component {
         return (
             <Fragment>
                 <section id="content-area">
-                    <div class="col-md-12">
-                        <div class="row">
-                            <a href="/#" class="btn btn-green">
+                    <div className="col-md-12">
+                        <div className="row">
+                            <a href="/#" className="btn btn-green">
                                 + New Supplier
                             </a>
                         </div>
                     </div>
 
-                    <div class="col-md-12">
-                        <div class="row">
+                    <div className="col-md-12">
+                        <div className="row">
                             <table>
                                 <thead>
                                     <tr>
@@ -36,7 +36,7 @@ class Staff extends React.Component {
                                             <img
                                                 src="https://res.cloudinary.com/duypham9895/image/upload/v1569165296/sample.jpg"
                                                 alt=""
-                                                class="product-img"
+                                                className="product-img"
                                             />
                                         </td>
                                         <td>Rose</td>
@@ -45,19 +45,19 @@ class Staff extends React.Component {
                                         <td>111</td>
 
                                         <td>
-                                            <div class="circle check"></div>
+                                            <div className="circle check"></div>
                                         </td>
                                         <td>2.99</td>
                                         <td>3.5</td>
                                         <td>
                                             <a href="/#">
-                                                <i class="far fa-eye"></i>
+                                                <i className="far fa-eye"></i>
                                             </a>
                                             <a href="/#">
-                                                <i class="fas fa-edit"></i>
+                                                <i className="fas fa-edit"></i>
                                             </a>
                                             <a href="/#">
-                                                <i class="fas fa-trash-alt"></i>
+                                                <i className="fas fa-trash-alt"></i>
                                             </a>
                                         </td>
                                     </tr>
@@ -66,7 +66,7 @@ class Staff extends React.Component {
                                             <img
                                                 src="https://res.cloudinary.com/duypham9895/image/upload/v1569165296/sample.jpg"
                                                 alt=""
-                                                class="product-img"
+                                                className="product-img"
                                             />
                                         </td>
                                         <td>Rose</td>
@@ -75,19 +75,19 @@ class Staff extends React.Component {
                                         <td>111</td>
 
                                         <td>
-                                            <div class="circle check"></div>
+                                            <div className="circle check"></div>
                                         </td>
                                         <td>2.99</td>
                                         <td>3.5</td>
                                         <td>
                                             <a href="/#">
-                                                <i class="far fa-eye"></i>
+                                                <i className="far fa-eye"></i>
                                             </a>
                                             <a href="/#">
-                                                <i class="fas fa-edit"></i>
+                                                <i className="fas fa-edit"></i>
                                             </a>
                                             <a href="/#">
-                                                <i class="fas fa-trash-alt"></i>
+                                                <i className="fas fa-trash-alt"></i>
                                             </a>
                                         </td>
                                     </tr>

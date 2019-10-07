@@ -90,7 +90,7 @@ router.post(
             };
             // await accountService.create(user);
             let account = await accountService.create(user);
-            return res.status(200).json();
+            return res.status(200).json("Register successful");
 
             // const payload = {
             //     account: {

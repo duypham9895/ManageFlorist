@@ -2,9 +2,14 @@ import axios from "axios";
 import { GET_SUPPLIERS } from "./types";
 
 // Get suppliers
-export const getSuppliers = () => async dispatch => {
+export const getSuppliers = token => async dispatch => {
     try {
-        const res = await axios.get("/api/supplier");
+        const config = {
+            headers: {
+                "x-auth-token": token
+            }
+        };
+        const res = await axios.get("/api/supplier", config);
         dispatch({
             type: GET_SUPPLIERS,
             payload: res.data

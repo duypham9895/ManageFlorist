@@ -7,6 +7,8 @@ const bcrypt = require("bcryptjs");
 const { check, validationResult } = require("express-validator");
 
 const Account = require("../../models/Account");
+const Member = require("../../models/Member");
+const Customer = require("../../models/Customer");
 
 // @route   GET api/auth
 // @desc    Test route
@@ -48,12 +50,12 @@ router.post(
             let findPhone = await Account.findOne({ phone: username });
 
             if (!findEmail && !findPhone) {
-                return res.status(400).json({
+                return res.status(404).json({
                     errors: [{ msg: "Your account does not exist." }]
                 });
             }
 
-            let account;
+            let account, member, customer;
 
             if (findEmail) account = findEmail;
             if (findPhone) account = findPhone;
@@ -65,6 +67,10 @@ router.post(
                     errors: [{ msg: "Your username or password incorrect" }]
                 });
             }
+            member = await Member.findOne({ "account.email": account.email });
+            customer = await Customer.findOne({
+                "account.email": account.email
+            });
 
             const payload = {
                 account: {
@@ -80,6 +86,16 @@ router.post(
                     if (err) throw err;
 
                     account.token = token;
+
+                    if (member) {
+                        member.account = account;
+                        await member.save();
+                    }
+                    if (customer) {
+                        customer.account = account;
+                        await customer.save();
+                    }
+
                     await account.save();
 
                     return res.status(200).json(token);

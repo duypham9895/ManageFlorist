@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require("../../middleware/auth");
 const { check, validationResult } = require("express-validator");
 
+const Role = require("../../models/Role");
 const Account = require("../../models/Account");
 const Member = require("../../models/Member");
 const Supplier = require("../../models/Supplier");
@@ -56,10 +57,7 @@ router.post(
         } = req.body;
 
         let account = await Account.findById(req.account.id);
-        console.log("demo = ", req.account);
-        console.log("account = ", account);
-        let member = await Member.findOne({ account });
-        console.log("member = ", member);
+        let member = await Member.findOne({ account: account });
         // Check if account is not member
         if (!member) {
             return res

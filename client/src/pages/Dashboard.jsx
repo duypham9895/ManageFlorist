@@ -26,7 +26,7 @@ class Dashboard extends React.Component {
                     <Spinner />
                 ) : (
                     <Fragment>
-                        <Sidebar />
+                        <Sidebar {...this.props.history} />
                         <Route path="/dashboard/home" component={Home} />
                         <Route path="/dashboard/order" component={Orders} />
                         <Route
