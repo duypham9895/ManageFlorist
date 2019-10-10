@@ -2,7 +2,7 @@ module.exports = cors = (req, res, next) => {
     res.setHeader(
         "Access-Control-Allow-Origin",
         process.env.NODE_ENV === "production"
-            ? "http://oalm.herokuapp.com"
+            ? "http://florist-sunshine.herokuapp.com"
             : "http://localhost:3000"
     );
     res.setHeader(
