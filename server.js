@@ -1,8 +1,11 @@
 const express = require("express");
 const connectDB = require("./config/db");
 const path = require("path");
+const config = require("config");
 
 const app = express();
+
+process.env["NODE_CONFIG_DIR"] = __dirname + "/config/";
 
 // Connect Database
 connectDB();
