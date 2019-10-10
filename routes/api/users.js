@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const jwt = require("jsonwebtoken");
-const config = require("config");
+const auth = require("../../middleware/auth");
 const { check, validationResult } = require("express-validator");
 
 const Account = require("../../models/Account");
+const Member = require("../../models/Member");
+const Customer = require("../../models/Customer");
+const Invoice = require("../../models/Invoice");
 
 // Service
 const accountService = require("../service/account");
@@ -88,33 +90,56 @@ router.post(
                 birthday,
                 address
             };
-            // await accountService.create(user);
             let account = await accountService.create(user);
             return res.status(200).json("Register successful");
-
-            // const payload = {
-            //     account: {
-            //         id: account.id
-            //     }
-            // };
-
-            // jwt.sign(
-            //     payload,
-            //     config.get("jwtSecret"),
-            //     { expiresIn: 360000 },
-            //     async (err, token) => {
-            //         if (err) throw err;
-            //         account.token = token;
-            //         await account.save();
-
-            //         return res.status(200).json(token);
-            //     }
-            // );
         } catch (error) {
             console.error(error);
             res.status(500).send("Server error");
         }
     }
 );
+
+// @route   POST api/users/logout
+// @desc    Logout user
+// @access  Public
+router.post("/logout", auth, async (req, res) => {
+    try {
+        let account = await Account.findById(req.account.id);
+        if (account) {
+            account.token = "";
+
+            let customer = await Customer.findOne({ account });
+            let member = await Member.findOne({ account });
+
+            if (customer) {
+                customer.account = account;
+                let invoice = await Invoice.findOne({ customer });
+                if (invoice) {
+                    invoice.customer = customer;
+                    await invoice.save();
+                }
+                await customer.save();
+            }
+
+            if (member) {
+                member.account = account;
+                let invoice = await Invoice.findOne({ member });
+                if (invoice) {
+                    invoice.member = member;
+                    await invoice.save();
+                }
+                await member.save();
+            }
+
+            await account.save();
+            return res.status(200).json();
+        }
+
+        return res.status(404).json();
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Server error");
+    }
+});
 
 module.exports = router;

@@ -27,7 +27,7 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { _id, name } = req.body;
+        const { name, isExists } = req.body;
 
         let account = await Account.findById(req.account.id);
         let member = await Member.findOne({ account });
@@ -47,16 +47,17 @@ router.post(
         }
 
         try {
-            let category = await Category.findOne({ _id });
+            let category = await Category.findOne({ name });
 
             if (category) {
-                return res.status(400).json({
-                    errors: [{ msg: "This Category already exists" }]
-                });
+                category.name = name;
+                category.isExists = isExists;
+
+                await category.save();
+                return res.json(category);
             }
 
             category = new Category({
-                _id,
                 name
             });
 

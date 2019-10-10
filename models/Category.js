@@ -2,7 +2,6 @@ let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
 let CategorySchema = new Schema({
-    _id: String,
     name: {
         type: String,
         required: true

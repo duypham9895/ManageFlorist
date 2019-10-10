@@ -24,9 +24,7 @@ router.post(
         check("address", "Address is required")
             .not()
             .isEmpty(),
-        check("_id", "ID is required")
-            .not()
-            .isEmpty()
+        check("email", "Please include a valid email").isEmail()
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -34,7 +32,7 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { _id, name, address, phone } = req.body;
+        const { email, name, address, phone, isExists } = req.body;
 
         let account = await Account.findById(req.account.id);
         let member = await Member.findOne({ account });
@@ -53,23 +51,26 @@ router.post(
         }
 
         try {
-            let supplier = await Supplier.findOne({ _id, name, phone });
+            let supplier = await Supplier.findOne({ name });
             if (supplier) {
-                return res.status(400).json({
-                    errors: [{ msg: "This Supplier already exists" }]
-                });
-            }
+                supplier.name = name;
+                supplier.phone = phone;
+                supplier.email = email;
+                supplier.address = address;
+                supplier.isExists = isExists;
 
+                await supplier.save();
+                return res.json(supplier);
+            }
             supplier = new Supplier({
-                _id,
+                email,
                 name,
                 phone,
                 address
             });
 
             await supplier.save();
-
-            res.json(supplier);
+            return res.json(supplier);
         } catch (error) {
             console.error(error);
             res.status(500).send("Server error");
@@ -97,6 +98,47 @@ router.get("/", auth, async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send("Server error");
+    }
+});
+
+// @route    DELETE api/supplier/:id
+// @desc     Delete a post
+// @access   Private
+router.delete("/:id", auth, async (req, res) => {
+    try {
+        let supplier = await Supplier.findById(req.params.id);
+
+        if (!supplier) {
+            return res.status(404).json({ msg: "Supplier not found" });
+        }
+
+        // Check ADMIN
+        let account = await Account.findById(req.account.id);
+        let member = await Member.findOne({ account });
+
+        // Check if account is not member
+        if (!member) {
+            return res
+                .status(401)
+                .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
+        }
+
+        if (member.role.name !== "ADMIN") {
+            return res
+                .status(401)
+                .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
+        }
+        supplier.isExists = false;
+        await supplier.save();
+
+        res.json({ msg: "Supplier removed" });
+    } catch (err) {
+        console.error(err.message);
+        if (err.kind === "ObjectId") {
+            console.log("test");
+            return res.status(404).json({ msg: "Supplier not found" });
+        }
+        res.status(500).send("Server Error");
     }
 });
 

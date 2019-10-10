@@ -110,8 +110,19 @@ export const checkSession = history => async dispatch => {
 };
 
 // Logout / Clear Profile
-export const logout = () => dispatch => {
-    dispatch({ type: LOGOUT });
+export const logout = (token, history) => async dispatch => {
+    try {
+        await fetch("http://localhost:4949/api/users/logout", {
+            method: "POST",
+            headers: {
+                "x-auth-token": token
+            }
+        });
+        dispatch({ type: LOGOUT });
+        history.push("/login");
+    } catch (error) {
+        console.error(error);
+    }
 };
 
 function setCookie(name, value, days) {

@@ -32,7 +32,7 @@ class LoginPage extends React.Component {
 
     render() {
         if (this.props.isAuthenticated) {
-            return <Redirect to="/dashboard" />;
+            return <Redirect to="/dashboard/home" />;
         }
         const errors = this.props.errors;
         return (

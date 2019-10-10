@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import { logout } from "../../actions/auth";
 
-class Navbar extends React.Component {
+class Sidebar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -23,8 +23,9 @@ class Navbar extends React.Component {
     }
     active(value, e) {
         if (value === "logout") {
-            // console.log(this.props);
-            this.props.dispatch(logout());
+            this.props.dispatch(
+                logout(this.props.auth.token, this.props.history)
+            );
         }
         let temp;
         let active = { ...this.state.active };
@@ -46,10 +47,9 @@ class Navbar extends React.Component {
 
     componentDidMount() {
         let str = this.props.location.pathname.split("/");
-        let target = str[str.length - 1];
+        let target = str[str.indexOf("dashboard") + 1];
 
         if (this.state.active[target] === undefined) {
-            console.log(target);
             this.setState({
                 active: {
                     ...this.state.active,
@@ -57,7 +57,7 @@ class Navbar extends React.Component {
                 }
             });
 
-            return;
+            // return this.props.push("/dashboard/home");
         }
         this.setState({
             active: {
@@ -109,7 +109,7 @@ class Navbar extends React.Component {
                         </Link>
                         <Link
                             onClick={this.active.bind(this, "supplier")}
-                            to="/dashboard/supplier"
+                            to="/dashboard/supplier/data"
                             className={active.supplier}
                         >
                             <i className="fas fa-address-book"></i>Supplier
@@ -149,4 +149,10 @@ class Navbar extends React.Component {
     }
 }
 
-export default connect()(Navbar);
+const mapStateToProps = store => {
+    return {
+        auth: store.auth
+    };
+};
+
+export default connect(mapStateToProps)(Sidebar);

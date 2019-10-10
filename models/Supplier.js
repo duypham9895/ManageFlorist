@@ -2,8 +2,6 @@ let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
 let SupplierSchema = new Schema({
-    // name, address, phone
-    _id: String,
     name: {
         type: String,
         required: true
@@ -13,6 +11,10 @@ let SupplierSchema = new Schema({
         required: true
     },
     phone: {
+        type: String,
+        required: true
+    },
+    email: {
         type: String,
         required: true
     },
