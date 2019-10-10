@@ -16,9 +16,6 @@ router.post(
         auth,
         check("name", "Name is required")
             .not()
-            .isEmpty(),
-        check("_id", "ID is required")
-            .not()
             .isEmpty()
     ],
     async (req, res) => {
@@ -91,6 +88,47 @@ router.get("/", auth, async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send("Server error");
+    }
+});
+
+// @route    DELETE api/category/:id
+// @desc     Delete a post
+// @access   Private
+router.delete("/:id", auth, async (req, res) => {
+    try {
+        let category = await Category.findById(req.params.id);
+
+        if (!category) {
+            return res.status(404).json({ msg: "Category not found" });
+        }
+
+        // Check ADMIN
+        let account = await Account.findById(req.account.id);
+        let member = await Member.findOne({ account });
+
+        // Check if account is not member
+        if (!member) {
+            return res
+                .status(401)
+                .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
+        }
+
+        if (member.role.name !== "ADMIN") {
+            return res
+                .status(401)
+                .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
+        }
+        category.isExists = false;
+        await category.save();
+
+        res.json({ msg: "Category removed" });
+    } catch (err) {
+        console.error(err.message);
+        if (err.kind === "ObjectId") {
+            console.log("test");
+            return res.status(404).json({ msg: "Category not found" });
+        }
+        res.status(500).send("Server Error");
     }
 });
 

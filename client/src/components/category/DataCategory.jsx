@@ -4,15 +4,28 @@ import { connect } from "react-redux";
 import Moment from "moment";
 
 import {
-    getCategories
-    // changeData,
-    // deleteSupplier,
-    // refreshSupplier
+    getCategories,
+    changeData,
+    deleteCategory,
+    refreshCategory
 } from "../../actions/category";
 
 class DataCategory extends React.Component {
     componentDidMount() {
         this.props.dispatch(getCategories(this.props.auth.token));
+    }
+    edit(data) {
+        data.isCreate = false;
+        console.log(data);
+        this.props.dispatch(changeData(data));
+    }
+
+    delete(id) {
+        this.props.dispatch(deleteCategory(id, this.props.auth.token));
+    }
+
+    refresh() {
+        this.props.dispatch(refreshCategory());
     }
     render() {
         const categories = this.props.category.categories;
@@ -24,6 +37,7 @@ class DataCategory extends React.Component {
                             <Link
                                 to="/dashboard/category/form"
                                 className="btn btn-green"
+                                onClick={this.refresh.bind(this)}
                             >
                                 + New Category
                             </Link>
@@ -65,19 +79,19 @@ class DataCategory extends React.Component {
                                                 <td>
                                                     <Link
                                                         to="/dashboard/category/form"
-                                                        // onClick={this.edit.bind(
-                                                        //     this,
-                                                        //     sup
-                                                        // )}
+                                                        onClick={this.edit.bind(
+                                                            this,
+                                                            ct
+                                                        )}
                                                     >
                                                         <i className="fas fa-edit"></i>
                                                     </Link>
                                                     <span
                                                         className="pointer"
-                                                        // onClick={this.delete.bind(
-                                                        //     this,
-                                                        //     sup._id
-                                                        // )}
+                                                        onClick={this.delete.bind(
+                                                            this,
+                                                            ct._id
+                                                        )}
                                                     >
                                                         <i className="fas fa-trash-alt"></i>
                                                     </span>

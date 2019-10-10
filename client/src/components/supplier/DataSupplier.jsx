@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import Moment from "moment";
 
 import {
     getSuppliers,
@@ -67,7 +68,11 @@ class DataSupplier extends React.Component {
                                                 <td>{sup.address}</td>
                                                 <td>{sup.phone}</td>
                                                 <td>{sup.email}</td>
-                                                <td>{sup.date_create}</td>
+                                                <td>
+                                                    {Moment(
+                                                        sup.date_create
+                                                    ).format("DD-MM-YYYY")}
+                                                </td>
                                                 <td>
                                                     <div
                                                         className={

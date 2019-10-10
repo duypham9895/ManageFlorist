@@ -6,16 +6,10 @@ import { changeData, createSupplier } from "../../actions/supplier";
 
 class FormSupplier extends React.Component {
     onChange(e) {
-        // if (e.target.name === "isExists") {
-        //     let boo = e.target.value === "true";
-        //     e.target.value = boo;
-        //     console.log(e.target.value);
-        // }
         let data = {
             ...this.props.supp.supplier,
             [e.target.name]: e.target.value
         };
-        // console.log(data);
         this.props.dispatch(changeData(data));
     }
     submit() {
