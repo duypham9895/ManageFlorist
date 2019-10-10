@@ -21,6 +21,10 @@ let SupplierSchema = new Schema({
     isExists: {
         type: Boolean,
         default: true
+    },
+    date_create: {
+        type: Date,
+        default: Date.now
     }
 });
 

@@ -153,7 +153,7 @@ class FormSupplier extends React.Component {
                                         }
                                     />
                                 </div>
-                                {supplier === null ? (
+                                {isCreate ? (
                                     ""
                                 ) : (
                                     <div className="wrap-input100 input100-select bg1">

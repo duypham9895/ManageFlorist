@@ -12,13 +12,11 @@ class Supplier extends React.Component {
                 <Route
                     path="/dashboard/supplier/form"
                     render={props => <FormSupplier {...props} />}
-                    // component={FormSupplier}
                 />
 
                 <Route
                     path="/dashboard/supplier/data"
                     render={props => <DataSupplier {...props} />}
-                    // component={FormSupplier}
                 />
             </Fragment>
         );

@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Redirect, Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { login } from "../actions/auth";
 
@@ -87,10 +87,10 @@ class LoginPage extends React.Component {
                             >
                                 Login
                             </button>
-                            <p>
+                            {/* <p>
                                 Don't have an account{" "}
                                 <Link to="/register">Sign Up</Link>
-                            </p>
+                            </p> */}
                         </div>
                     </div>
                 </div>

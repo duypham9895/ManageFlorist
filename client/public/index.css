@@ -1072,15 +1072,15 @@ textarea {
     border: none;
 }
 
-textarea:focus,
+/* textarea:focus,
 input:focus {
     border-color: transparent !important;
-}
+} */
 
-input:focus::-webkit-input-placeholder {
+/* input:focus::-webkit-input-placeholder {
     color: transparent;
-}
-input:focus:-moz-placeholder {
+} */
+/* input:focus:-moz-placeholder {
     color: transparent;
 }
 input:focus::-moz-placeholder {
@@ -1127,7 +1127,7 @@ textarea::-moz-placeholder {
 }
 textarea:-ms-input-placeholder {
     color: #adadad;
-}
+} */
 
 /*---------------------------------------------*/
 /* button {

@@ -1,44 +1,31 @@
 import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import Moment from "moment";
 
 import {
-    getSuppliers,
-    changeData,
-    deleteSupplier,
-    refreshSupplier
-} from "../../actions/supplier";
+    getCategories
+    // changeData,
+    // deleteSupplier,
+    // refreshSupplier
+} from "../../actions/category";
 
-class DataSupplier extends React.Component {
+class DataCategory extends React.Component {
     componentDidMount() {
-        this.props.dispatch(getSuppliers(this.props.auth.token));
-    }
-
-    edit(data) {
-        data.isCreate = false;
-        this.props.dispatch(changeData(data));
-    }
-
-    delete(id) {
-        this.props.dispatch(deleteSupplier(id, this.props.auth.token));
-    }
-
-    refresh() {
-        this.props.dispatch(refreshSupplier());
+        this.props.dispatch(getCategories(this.props.auth.token));
     }
     render() {
-        const suppliers = this.props.supplier.suppliers;
+        const categories = this.props.category.categories;
         return (
             <Fragment>
                 <section id="content-area">
                     <div className="col-md-12">
                         <div className="row">
                             <Link
-                                to="/dashboard/supplier/form"
+                                to="/dashboard/category/form"
                                 className="btn btn-green"
-                                onClick={this.refresh.bind(this)}
                             >
-                                + New Supplier
+                                + New Category
                             </Link>
                         </div>
                     </div>
@@ -50,28 +37,26 @@ class DataSupplier extends React.Component {
                                     <tr>
                                         <th></th>
                                         <th>NAME</th>
-                                        <th>ADDRESS</th>
-                                        <th>PHONE</th>
-                                        <th>EMAIL</th>
                                         <th>DATE CREATE</th>
                                         <th>STATUS</th>
                                         <th>OPTIONS</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {suppliers.map((sup, key) => {
+                                    {categories.map((ct, key) => {
                                         return (
                                             <tr key={key}>
                                                 <td>{key + 1}</td>
-                                                <td>{sup.name}</td>
-                                                <td>{sup.address}</td>
-                                                <td>{sup.phone}</td>
-                                                <td>{sup.email}</td>
-                                                <td>{sup.date_create}</td>
+                                                <td>{ct.name}</td>
+                                                <td>
+                                                    {Moment(
+                                                        ct.date_create
+                                                    ).format("DD-MM-YYYY")}
+                                                </td>
                                                 <td>
                                                     <div
                                                         className={
-                                                            sup.isExists
+                                                            ct.isExists
                                                                 ? "circle check"
                                                                 : "circle uncheck"
                                                         }
@@ -79,20 +64,20 @@ class DataSupplier extends React.Component {
                                                 </td>
                                                 <td>
                                                     <Link
-                                                        to="/dashboard/supplier/form"
-                                                        onClick={this.edit.bind(
-                                                            this,
-                                                            sup
-                                                        )}
+                                                        to="/dashboard/category/form"
+                                                        // onClick={this.edit.bind(
+                                                        //     this,
+                                                        //     sup
+                                                        // )}
                                                     >
                                                         <i className="fas fa-edit"></i>
                                                     </Link>
                                                     <span
                                                         className="pointer"
-                                                        onClick={this.delete.bind(
-                                                            this,
-                                                            sup._id
-                                                        )}
+                                                        // onClick={this.delete.bind(
+                                                        //     this,
+                                                        //     sup._id
+                                                        // )}
                                                     >
                                                         <i className="fas fa-trash-alt"></i>
                                                     </span>
@@ -112,9 +97,9 @@ class DataSupplier extends React.Component {
 
 const mapStateToProps = store => {
     return {
-        supplier: store.supplier,
-        auth: store.auth
+        auth: store.auth,
+        category: store.category
     };
 };
 
-export default connect(mapStateToProps)(DataSupplier);
+export default connect(mapStateToProps)(DataCategory);

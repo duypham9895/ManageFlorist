@@ -102,7 +102,7 @@ class Sidebar extends React.Component {
                         </Link>
                         <Link
                             onClick={this.active.bind(this, "category")}
-                            to="/dashboard/category"
+                            to="/dashboard/category/data"
                             className={active.category}
                         >
                             <i className="fas fa-clipboard-list"></i>Category

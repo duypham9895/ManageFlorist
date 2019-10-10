@@ -9,6 +9,10 @@ let CategorySchema = new Schema({
     isExists: {
         type: Boolean,
         default: true
+    },
+    date_create: {
+        type: Date,
+        default: Date.now
     }
 });
 module.exports = Category = mongoose.model("category", CategorySchema);

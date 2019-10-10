@@ -76,9 +76,7 @@ router.post(
 // @access   Private
 router.get("/", auth, async (req, res) => {
     let account = await Account.findById(req.account.id);
-    console.log(account);
     let member = await Member.findOne({ account });
-    console.log(member);
 
     // Check if account is not member
     if (!member) {
