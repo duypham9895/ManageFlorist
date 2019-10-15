@@ -1,7 +1,7 @@
 const express = require("express");
 const connectDB = require("./config/db");
 const path = require("path");
-const config = require("config");
+// const config = require("config");
 
 const app = express();
 
@@ -13,6 +13,7 @@ connectDB();
 // Init Middleware
 app.use(express.json({ extended: false }));
 app.use(require("./middleware/cors"));
+app.set("trust proxy", true);
 
 // Define routes
 // /// About Auth & User
@@ -36,14 +37,10 @@ app.use("/api/invoice", require("./routes/api/invoice"));
 
 // Server static assets in production
 if (process.env.NODE_ENV === "production") {
-    // Set staic folder
-    app.use(express.static(path.join(__dirname, "client/build")));
+    app.use(express.static("client/build"));
 
     app.get("*", (req, res) => {
-        res.sendFile(path.join((__dirname = "client/build/index.html")));
-    });
-    app.get("*", (req, res) => {
-        res.sendFile(path.join(__dirname + "/client/public/index.html"));
+        res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
     });
 }
 
