@@ -1,24 +1,20 @@
 let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
-let InvoiceDetailSchema = new Schema({
-    invoice: {
+let GoodsReceiptDetailSchema = new Schema({
+    goodsReceipt: {
         type: Schema.Types.Mixed,
-        ref: "invoice"
+        ref: "goods_receipt"
     },
     product: {
         type: Schema.Types.Mixed,
         ref: "product"
     },
-    qty: {
-        type: Number,
-        required: true
-    },
     unitPrice: {
         type: Number,
         required: true
     },
-    total: {
+    qty: {
         type: Number,
         required: true
     },
@@ -27,7 +23,7 @@ let InvoiceDetailSchema = new Schema({
         default: Date.now
     }
 });
-module.exports = InvoiceDetail = mongoose.model(
-    "invoice_detail",
-    InvoiceDetailSchema
+module.exports = GoodsReceiptDetail = mongoose.model(
+    "goods_receipt_detail",
+    GoodsReceiptDetailSchema
 );

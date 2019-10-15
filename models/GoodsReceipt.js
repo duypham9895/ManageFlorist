@@ -1,14 +1,14 @@
 let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
-let InvoiceSchema = new Schema({
+let GoodsReceiptSchema = new Schema({
     member: {
         type: Schema.Types.Mixed,
         ref: "member"
     },
-    customer: {
+    supplier: {
         type: Schema.Types.Mixed,
-        ref: "customer"
+        ref: "supplier"
     },
     total: {
         type: Number,
@@ -17,10 +17,9 @@ let InvoiceSchema = new Schema({
     dateCreate: {
         type: Date,
         default: Date.now
-    },
-    discount: {
-        type: Schema.Types.Mixed,
-        ref: "discount"
     }
 });
-module.exports = Invoice = mongoose.model("invoice", InvoiceSchema);
+module.exports = GoodsReceipt = mongoose.model(
+    "goods_receipt",
+    GoodsReceiptSchema
+);

@@ -23,9 +23,11 @@ let AccountSchema = new Schema({
         unique: true
     },
     avatar: {
-        type: String
+        type: String,
+        default:
+            "https://res.cloudinary.com/duypham9895/image/upload/v1570775911/images_hipxps.png"
     },
-    date_create: {
+    dateCreate: {
         type: Date,
         default: Date.now
     },

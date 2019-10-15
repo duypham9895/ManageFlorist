@@ -22,6 +22,10 @@ let DiscountSchema = new Schema({
     endDate: {
         type: Date,
         required: true
+    },
+    dateCreate: {
+        type: Date,
+        default: Date.now
     }
 });
 module.exports = Discount = mongoose.model("discount", DiscountSchema);

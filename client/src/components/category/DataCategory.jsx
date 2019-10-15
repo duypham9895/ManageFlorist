@@ -16,7 +16,6 @@ class DataCategory extends React.Component {
     }
     edit(data) {
         data.isCreate = false;
-        console.log(data);
         this.props.dispatch(changeData(data));
     }
 

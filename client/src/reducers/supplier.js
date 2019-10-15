@@ -33,9 +33,9 @@ export default function(state = initialState, action) {
         }
 
         case CHANGE_DATA_SUPPLIER: {
-            let isExists = payload.isExists === "true";
+            let isExists =
+                payload.isExists === "true" || payload.isExists === true;
             payload.isExists = isExists;
-            console.log(payload);
             return {
                 ...state,
                 supplier: payload
@@ -99,9 +99,9 @@ export default function(state = initialState, action) {
         case DELETE_SUPPLIER: {
             return {
                 ...state,
-                suppliers: state.suppliers.filter(
-                    supplier => supplier._id !== payload
-                ),
+                // suppliers: state.suppliers.filter(
+                //     supplier => supplier._id !== payload
+                // ),
                 loading: false
             };
         }

@@ -95,7 +95,7 @@ class Sidebar extends React.Component {
                         </Link>
                         <Link
                             onClick={this.active.bind(this, "product")}
-                            to="/dashboard/product"
+                            to="/dashboard/product/data"
                             className={active.product}
                         >
                             <i className="fas fa-shopping-cart"></i>Product

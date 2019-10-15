@@ -22,7 +22,7 @@ let SupplierSchema = new Schema({
         type: Boolean,
         default: true
     },
-    date_create: {
+    dateCreate: {
         type: Date,
         default: Date.now
     }

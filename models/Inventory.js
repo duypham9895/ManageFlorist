@@ -20,6 +20,10 @@ let InventorySchema = new Schema({
     isDamage: {
         type: Boolean,
         default: false
+    },
+    dateCreate: {
+        type: Date,
+        default: Date.now
     }
 });
 module.exports = Inventory = mongoose.model("inventory", InventorySchema);

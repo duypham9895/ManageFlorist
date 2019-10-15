@@ -14,7 +14,7 @@ let RoleSchema = new Schema({
         type: Number,
         required: true
     },
-    date: {
+    dateCreate: {
         type: Date,
         default: Date.now
     }

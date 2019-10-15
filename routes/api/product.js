@@ -3,13 +3,15 @@ const router = express.Router();
 const auth = require("../../middleware/auth");
 const { check, validationResult } = require("express-validator");
 
-const Role = require("../../models/Role");
+// const Role = require("../../models/Role");
 const Account = require("../../models/Account");
 const Member = require("../../models/Member");
 const Supplier = require("../../models/Supplier");
 const Category = require("../../models/Category");
 const Inventory = require("../../models/Inventory");
 const Product = require("../../models/Product");
+const GoodsReceipt = require("../../models/GoodsReceipt");
+const GoodsReceiptDetail = require("../../models/GoodsReceiptDetail");
 
 // @route   POST api/product
 // @desc    Create Product & add this to Inventory
@@ -18,9 +20,6 @@ router.post(
     "/",
     [
         auth,
-        check("_id", "ID is required")
-            .not()
-            .isEmpty(),
         check("name", "Name is required")
             .not()
             .isEmpty(),
@@ -35,6 +34,9 @@ router.post(
             .isEmpty(),
         check("qty", "Expired is required")
             .not()
+            .isEmpty(),
+        check("images", "Images is required")
+            .not()
             .isEmpty()
     ],
     async (req, res) => {
@@ -44,7 +46,6 @@ router.post(
         }
 
         const {
-            _id,
             name,
             description,
             images,
@@ -68,7 +69,11 @@ router.post(
         let findCategory = await Category.findOne({ name: category });
         let findSupplier = await Supplier.findOne({ name: supplier });
 
-        if (!findCategory || !findSupplier || sellingPrice <= importPrice) {
+        if (
+            !findCategory ||
+            !findSupplier ||
+            Number(sellingPrice) < Number(importPrice)
+        ) {
             return res.status(400).json({
                 errors: [
                     {
@@ -89,36 +94,77 @@ router.post(
         }
 
         try {
-            // let product = await Product.findOne({_id:id})
+            let product = await Product.findOne({ name });
 
-            let product = new Product({
-                _id,
-                name,
-                description,
-                images,
-                importPrice,
-                sellingPrice,
-                expired,
-                category: findCategory,
-                supplier: findSupplier
-            });
+            if (product) {
+                product.name = name;
+                product.description = description;
+                product.images = images;
+                product.importPrice = importPrice;
+                product.sellingPrice = sellingPrice;
+                product.expired = expired;
+                product.category = category;
 
-            await product.save();
+                await product.save();
+            } else {
+                product = new Product({
+                    name,
+                    description,
+                    images,
+                    importPrice,
+                    sellingPrice,
+                    expired,
+                    category: findCategory
+                });
+
+                await product.save();
+            }
 
             // Calculate expiration date
             let expirationDate = new Date();
             expirationDate.setDate(expirationDate.getDate() + Number(expired));
 
-            // // Add this product to inventory
-            let inventory = new Inventory({
+            let inventory = await Inventory.findOne({ product: product });
+
+            if (inventory) {
+                // Update Inventory
+                inventory.product = product;
+                inventory.receiptDate = new Date();
+                inventory.expirationDate = expirationDate;
+                inventory.qty = qty;
+                inventory.isDamage = false;
+
+                await inventory.save();
+            } else {
+                // Create new product in inventory
+                inventory = new Inventory({
+                    product: product,
+                    qty: qty,
+                    expirationDate: expirationDate
+                });
+
+                await inventory.save();
+            }
+
+            // Goods Receipt
+            let total = qty * product.importPrice;
+            let goodsReceipt = new GoodsReceipt({
+                member: member,
+                supplier: findSupplier,
+                total: total
+            });
+            await goodsReceipt.save();
+
+            // Goods Receipt Detail
+            let goodsReceiptDetail = new GoodsReceiptDetail({
+                goodsReceipt: goodsReceipt,
                 product: product,
                 qty: qty,
-                expirationDate: expirationDate
+                unitPrice: product.importPrice
             });
+            await goodsReceiptDetail.save();
 
-            await inventory.save();
-
-            res.json({ product, inventory });
+            res.json({ product, inventory, goodsReceipt, goodsReceiptDetail });
         } catch (error) {
             console.error(error);
             res.status(500).send("Server error");
@@ -130,12 +176,76 @@ router.post(
 // @desc     Get all product
 // @access   Private
 router.get("/", auth, async (req, res) => {
+    let account = await Account.findById(req.account.id);
+    let member = await Member.findOne({ account });
+
+    // Check if account is not member
+    if (!member) {
+        return res
+            .status(401)
+            .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
+    }
     try {
         const products = await Product.find().sort({ date: -1 });
         res.json(products);
     } catch (error) {
         console.error(error);
         res.status(500).send("Server error");
+    }
+});
+
+// @route    DELETE api/product/:id
+// @desc     Delete a product
+// @access   Private
+router.delete("/:id", auth, async (req, res) => {
+    try {
+        // Check ADMIN
+        let account = await Account.findById(req.account.id);
+        let member = await Member.findOne({ account });
+
+        // Check if account is not member
+        if (!member) {
+            return res
+                .status(401)
+                .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
+        }
+
+        if (member.role.name !== "ADMIN") {
+            return res
+                .status(401)
+                .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
+        }
+
+        let product = await Product.findById(req.params.id);
+        let inventory = await Inventory.findOne({ product });
+        // console.log(inventory.product._id);
+        // console.log(product._id);
+        // console.log(
+        //     "inventory = ",
+        //     inventory.product.images === product.images
+        // );
+
+        if (!product) {
+            return res.status(404).json({ msg: "Product not found" });
+        }
+
+        product.isExists = false;
+
+        inventory.product = product;
+        inventory.isDamage = true;
+        // console.log(inventory);
+
+        await product.save();
+        await inventory.save();
+
+        res.json({ msg: "Product removed" });
+    } catch (err) {
+        console.error(err.message);
+        if (err.kind === "ObjectId") {
+            console.log("test");
+            return res.status(404).json({ msg: "Product not found" });
+        }
+        res.status(500).send("Server Error");
     }
 });
 

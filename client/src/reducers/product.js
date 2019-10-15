@@ -1,16 +1,16 @@
 import {
-    GET_CATEGORIES,
-    CHANGE_DATA_CATEGORY,
-    CREATE_CATEGORY_SUCCESS,
-    CREATE_CATEGORY_ERROR,
-    CREATE_CATEGORY_FAIL,
-    DELETE_CATEGORY,
-    REFRESH_CATEGORY
+    GET_PRODUCTS,
+    CHANGE_DATA_PRODUCT,
+    CREATE_PRODUCT_SUCCESS,
+    CREATE_PRODUCT_ERROR,
+    CREATE_PRODUCT_FAIL,
+    DELETE_PRODUCT,
+    REFRESH_PRODUCT
 } from "../actions/types";
 const initialState = {
-    categories: [],
+    products: [],
     isCreate: false,
-    category: {},
+    product: {},
     loading: true,
     error: {
         name: ""
@@ -20,25 +20,25 @@ const initialState = {
 export default function(state = initialState, action) {
     const { type, payload } = action;
     switch (type) {
-        case GET_CATEGORIES: {
+        case GET_PRODUCTS: {
             return {
                 ...state,
-                categories: payload,
+                products: payload,
                 loading: false
             };
         }
 
-        case CHANGE_DATA_CATEGORY: {
+        case CHANGE_DATA_PRODUCT: {
             let isExists =
                 payload.isExists === "true" || payload.isExists === true;
             payload.isExists = isExists;
             return {
                 ...state,
-                category: payload
+                product: payload
             };
         }
 
-        case CREATE_CATEGORY_SUCCESS: {
+        case CREATE_PRODUCT_SUCCESS: {
             let msg = { ...state.error };
             msg.name = "";
 
@@ -46,11 +46,11 @@ export default function(state = initialState, action) {
                 ...state,
                 loading: false,
                 error: msg,
-                category: payload
+                product: payload
             };
         }
 
-        case CREATE_CATEGORY_ERROR: {
+        case CREATE_PRODUCT_ERROR: {
             let msg = { ...state.error };
             msg.name = "";
 
@@ -68,29 +68,26 @@ export default function(state = initialState, action) {
             };
         }
 
-        case CREATE_CATEGORY_FAIL: {
+        case CREATE_PRODUCT_FAIL: {
             return {
                 ...state,
                 loading: false,
-                categories: [],
-                category: null
+                products: [],
+                product: null
             };
         }
 
-        case DELETE_CATEGORY: {
+        case DELETE_PRODUCT: {
             return {
                 ...state,
-                // categories: state.categories.filter(
-                //     category => category._id !== payload
-                // ),
                 loading: false
             };
         }
 
-        case REFRESH_CATEGORY: {
+        case REFRESH_PRODUCT: {
             return {
                 ...state,
-                category: null,
+                product: null,
                 isCreate: true
             };
         }

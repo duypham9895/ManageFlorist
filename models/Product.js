@@ -2,7 +2,6 @@ let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
 let ProductSchema = new Schema({
-    _id: String,
     name: {
         type: String,
         required: true
@@ -13,7 +12,8 @@ let ProductSchema = new Schema({
     images: [
         {
             image: {
-                type: String
+                type: String,
+                required: true
             }
         }
     ],
@@ -33,13 +33,13 @@ let ProductSchema = new Schema({
         type: Schema.Types.Mixed,
         ref: "category"
     },
-    supplier: {
-        type: Schema.Types.Mixed,
-        ref: "supplier"
-    },
     isExists: {
         type: Boolean,
         default: true
+    },
+    dateCreate: {
+        type: Date,
+        default: Date.now
     }
 });
 module.exports = Product = mongoose.model("product", ProductSchema);
