@@ -1,0 +1,4 @@
+{
+    "mongoURI": "mongodb+srv://anhduy:duy123@cluster0-mbbcz.mongodb.net/manageflorist",
+    "jwtSecret": "b6a52421c0e9d9b6db2bdd4f4920d48c"
+}

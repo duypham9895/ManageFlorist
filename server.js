@@ -37,6 +37,7 @@ app.use("/api/invoice", require("./routes/api/invoice"));
 
 // Server static assets in production
 if (process.env.NODE_ENV === "production") {
+    // Set staic folder
     app.use(express.static("client/build"));
 
     app.get("*", (req, res) => {
