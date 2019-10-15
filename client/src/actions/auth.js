@@ -1,4 +1,5 @@
 import axios from "axios";
+// import config from "config";
 import {
     REGISTER_SUCCESS,
     REGISTER_FAIL,
@@ -93,35 +94,58 @@ export const login = (username, password) => async dispatch => {
 
 export const checkSession = history => async dispatch => {
     let token = getCookie("florist");
-    const res = await fetch("http://localhost:4949/api/auth", {
-        method: "PUT",
+    const config = {
         headers: {
             "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ token })
-    });
+        }
+    };
+    const body = JSON.stringify({ token });
+    try {
+        const res = await axios.put("/api/auth", body, config);
+        if (res.status === 200) {
+            dispatch({
+                type: LOGIN_SUCCESS,
+                payload: token
+            });
+        }
+    } catch (err) {
+        const error = err.response.data.errors;
 
-    if (res.status === 200) {
-        dispatch({
-            type: LOGIN_SUCCESS,
-            payload: token
-        });
+        if (error) {
+            dispatch({
+                type: LOGIN_ERROR,
+                payload: error
+            });
+        }
     }
 };
 
 // Logout / Clear Profile
 export const logout = (token, history) => async dispatch => {
+    console.log(token);
+    const config = {
+        headers: {
+            "x-auth-token": token
+        }
+    };
     try {
-        await fetch("http://localhost:4949/api/users/logout", {
-            method: "POST",
-            headers: {
-                "x-auth-token": token
-            }
-        });
-        dispatch({ type: LOGOUT });
-        history.push("/login");
-    } catch (error) {
-        console.error(error);
+        const res = await axios.get("/api/users/logout", config);
+        // console.log(res);
+        if (res.status === 200) {
+            dispatch({ type: LOGOUT });
+            history.push("/login");
+        } else {
+            dispatch({
+                type: LOGIN_ERROR,
+                payload: res.data
+            });
+        }
+    } catch (err) {
+        // const error = err.response.data.errors;
+        // dispatch({
+        //     type: LOGIN_ERROR,
+        //     payload: error
+        // });
     }
 };
 

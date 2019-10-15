@@ -99,10 +99,10 @@ router.post(
     }
 );
 
-// @route   POST api/users/logout
+// @route   GET api/users/logout
 // @desc    Logout user
-// @access  Public
-router.post("/logout", auth, async (req, res) => {
+// @access  Private
+router.get("/logout", auth, async (req, res) => {
     try {
         let account = await Account.findById(req.account.id);
         if (account) {
@@ -132,10 +132,10 @@ router.post("/logout", auth, async (req, res) => {
             }
 
             await account.save();
-            return res.status(200).json();
+            return res.sendStatus(200);
         }
 
-        return res.status(404).json();
+        return res.sendStatus(404);
     } catch (error) {
         console.error(error);
         res.status(500).send("Server error");

@@ -23,7 +23,7 @@ class Sidebar extends React.Component {
     }
     active(value, e) {
         if (value === "logout") {
-            this.props.dispatch(
+            return this.props.dispatch(
                 logout(this.props.auth.token, this.props.history)
             );
         }

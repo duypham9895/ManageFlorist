@@ -122,15 +122,15 @@ router.put("/", async (req, res) => {
             let account = await Account.findOne({ _id: id });
 
             if (!account) {
-                return res.status(400).json({ msg: "User not found." });
+                return res.sendStatus(400);
             }
 
-            if (account.token !== req.body.token) {
-                return res.status(400).json({ msg: "Invalid token" });
+            if (req.body.token !== account.token) {
+                return res.sendStatus(400);
             }
-            return res.status(200).send("ok");
+            return res.sendStatus(200);
         } else {
-            return res.status(400).json({ msg: "Invalid token" });
+            return res.sendStatus(400);
         }
     });
 });
