@@ -13,7 +13,7 @@ connectDB();
 // Init Middleware
 app.use(express.json({ extended: false }));
 app.use(require("./middleware/cors"));
-app.set("trust proxy", true);
+// app.set("trust proxy", true);
 
 // Define routes
 // /// About Auth & User
