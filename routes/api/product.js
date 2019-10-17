@@ -40,7 +40,17 @@ router.post(
             .isEmpty()
     ],
     async (req, res) => {
+        // console.log("first api product");
         const errors = validationResult(req);
+        // console.log(errors);
+        // console.log(
+        //     req.body.name,
+        //     req.body.importPrice,
+        //     req.body.sellingPrice,
+        //     req.body.expired,
+        //     req.body.images
+        // );
+        // console.log(req.body);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
@@ -53,11 +63,14 @@ router.post(
             sellingPrice,
             expired,
             qty,
+            isExists,
+            dateCreate,
+            isDamage,
             category,
             supplier
         } = req.body;
-
         let account = await Account.findById(req.account.id);
+        // console.log(account);
         let member = await Member.findOne({ account: account });
         // Check if account is not member
         if (!member) {
@@ -65,37 +78,60 @@ router.post(
                 .status(401)
                 .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
         }
-
-        let findCategory = await Category.findOne({ name: category });
+        // let findCategory = await Category.findOne(category);
         let findSupplier = await Supplier.findOne({ name: supplier });
-
-        if (
-            !findCategory ||
-            !findSupplier ||
-            Number(sellingPrice) < Number(importPrice)
-        ) {
-            return res.status(400).json({
-                errors: [
-                    {
-                        msg:
-                            "Your Information inputted was wrong. Please check again"
-                    }
-                ]
-            });
-        } else if (!findCategory.isExists || !findSupplier.isExists) {
-            return res.status(400).json({
-                errors: [
-                    {
-                        msg:
-                            "Information about Category or Supplier is not exists. Please check again"
-                    }
-                ]
-            });
+        let findCategory = {};
+        if (dateCreate === undefined) {
+            findCategory = await Category.findOne({ name: category });
+            if (
+                !findCategory ||
+                !findSupplier ||
+                Number(sellingPrice) < Number(importPrice)
+            ) {
+                return res.status(400).json({
+                    errors: [
+                        {
+                            msg:
+                                "Your Information inputted was wrong. Please check again"
+                        }
+                    ]
+                });
+            } else if (!findCategory.isExists || !findSupplier.isExists) {
+                return res.status(400).json({
+                    errors: [
+                        {
+                            msg:
+                                "Information about Category or Supplier is not exists. Please check again"
+                        }
+                    ]
+                });
+            }
+        } else {
+            findCategory = await Category.findOne(category);
+            if (!findCategory || Number(sellingPrice) < Number(importPrice)) {
+                return res.status(400).json({
+                    errors: [
+                        {
+                            msg:
+                                "Your Information inputted was wrong. Please check again"
+                        }
+                    ]
+                });
+            } else if (!findCategory.isExists) {
+                return res.status(400).json({
+                    errors: [
+                        {
+                            msg:
+                                "Information about Category is not exists. Please check again"
+                        }
+                    ]
+                });
+            }
         }
 
         try {
             let product = await Product.findOne({ name });
-
+            let inventory = await Inventory.findOne({ product: product });
             if (product) {
                 product.name = name;
                 product.description = description;
@@ -103,7 +139,8 @@ router.post(
                 product.importPrice = importPrice;
                 product.sellingPrice = sellingPrice;
                 product.expired = expired;
-                product.category = category;
+                product.category = findCategory;
+                product.isExists = isExists;
 
                 await product.save();
             } else {
@@ -123,16 +160,14 @@ router.post(
             // Calculate expiration date
             let expirationDate = new Date();
             expirationDate.setDate(expirationDate.getDate() + Number(expired));
-
-            let inventory = await Inventory.findOne({ product: product });
-
+            console.log(isDamage);
             if (inventory) {
                 // Update Inventory
                 inventory.product = product;
                 inventory.receiptDate = new Date();
                 inventory.expirationDate = expirationDate;
                 inventory.qty = qty;
-                inventory.isDamage = false;
+                inventory.isDamage = isDamage;
 
                 await inventory.save();
             } else {
@@ -145,26 +180,35 @@ router.post(
 
                 await inventory.save();
             }
+            // console.log(isExists);
+            // console.log(typeof isExists);
+            if (isExists === undefined) {
+                // Goods Receipt
+                let total = qty * product.importPrice;
+                let goodsReceipt = new GoodsReceipt({
+                    member: member,
+                    supplier: findSupplier,
+                    total: total
+                });
+                await goodsReceipt.save();
 
-            // Goods Receipt
-            let total = qty * product.importPrice;
-            let goodsReceipt = new GoodsReceipt({
-                member: member,
-                supplier: findSupplier,
-                total: total
-            });
-            await goodsReceipt.save();
+                // Goods Receipt Detail
+                let goodsReceiptDetail = new GoodsReceiptDetail({
+                    goodsReceipt: goodsReceipt,
+                    product: product,
+                    qty: qty,
+                    unitPrice: product.importPrice
+                });
+                await goodsReceiptDetail.save();
 
-            // Goods Receipt Detail
-            let goodsReceiptDetail = new GoodsReceiptDetail({
-                goodsReceipt: goodsReceipt,
-                product: product,
-                qty: qty,
-                unitPrice: product.importPrice
-            });
-            await goodsReceiptDetail.save();
-
-            res.json({ product, inventory, goodsReceipt, goodsReceiptDetail });
+                return res.json({
+                    product,
+                    inventory,
+                    goodsReceipt,
+                    goodsReceiptDetail
+                });
+            }
+            return res.json({ product, inventory });
         } catch (error) {
             console.error(error);
             res.status(500).send("Server error");
@@ -187,7 +231,25 @@ router.get("/", auth, async (req, res) => {
     }
     try {
         const products = await Product.find().sort({ date: -1 });
-        res.json(products);
+
+        // Check expired day of product
+        for (let product of products) {
+            product.dateCreate.setDate(
+                product.dateCreate.getDate() + product.expired
+            );
+
+            if (product.dateCreate === new Date()) {
+                product.isExists = false;
+                let inventory = await Inventory.findOne({ product: product });
+                inventory.product.isExists = false;
+                inventory.isDamage = true;
+                await product.save();
+                await inventory.save();
+            } else {
+                continue;
+            }
+        }
+        return res.json(products);
     } catch (error) {
         console.error(error);
         res.status(500).send("Server error");
@@ -218,12 +280,6 @@ router.delete("/:id", auth, async (req, res) => {
 
         let product = await Product.findById(req.params.id);
         let inventory = await Inventory.findOne({ product });
-        // console.log(inventory.product._id);
-        // console.log(product._id);
-        // console.log(
-        //     "inventory = ",
-        //     inventory.product.images === product.images
-        // );
 
         if (!product) {
             return res.status(404).json({ msg: "Product not found" });
@@ -238,14 +294,14 @@ router.delete("/:id", auth, async (req, res) => {
         await product.save();
         await inventory.save();
 
-        res.json({ msg: "Product removed" });
+        return res.json({ msg: "Product removed" });
     } catch (err) {
         console.error(err.message);
         if (err.kind === "ObjectId") {
             console.log("test");
             return res.status(404).json({ msg: "Product not found" });
         }
-        res.status(500).send("Server Error");
+        return res.status(500).send("Server Error");
     }
 });
 

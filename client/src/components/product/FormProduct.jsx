@@ -1,15 +1,37 @@
 import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import Moment from "moment";
 
 import { changeData, createProduct } from "../../actions/product";
+import { getCategories } from "../../actions/category";
+import { getSuppliers } from "../../actions/supplier";
 
 class FormProduct extends React.Component {
+    async componentDidMount() {
+        let token = this.props.auth.token;
+        await this.props.dispatch(getCategories(token));
+        await this.props.dispatch(getSuppliers(token));
+    }
     onChange(e) {
         let data = {
             ...this.props.prod.product,
             [e.target.name]: e.target.value
         };
+        let categories = this.props.category.categories;
+        let category = {};
+        let ct;
+        if (e.target.name === "category") {
+            for (ct of categories) {
+                if (ct.name === e.target.value) {
+                    category = ct;
+                    break;
+                }
+            }
+        }
+        if (category !== null) {
+            data.category = category;
+        }
         this.props.dispatch(changeData(data));
     }
     submit() {
@@ -22,6 +44,15 @@ class FormProduct extends React.Component {
         const errs = this.props.prod.error;
         const product = this.props.prod.product;
         const isCreate = this.props.prod.isCreate;
+        const categories = this.props.category.categories;
+        // console.log(categories);
+        // console.log(product);
+        // console.log(product.category === null);
+
+        if (product.category === undefined || product.category === null) {
+            product.category = { name: "" };
+        }
+        if (categories === undefined) categories.category = { name: "" };
         return (
             <Fragment>
                 <section id="content-area">
@@ -39,7 +70,7 @@ class FormProduct extends React.Component {
                     <div className="col-md-12">
                         <div className="row">
                             <div className="contact100-form">
-                                <div className="wrap-input100 bg1">
+                                <div className="wrap-input100 bg1 rs1-wrap-input100">
                                     <span className="label-input100">
                                         PRODUCT'S NAME *{" "}
                                         <span
@@ -56,7 +87,7 @@ class FormProduct extends React.Component {
                                         className="input100"
                                         type="text"
                                         name="name"
-                                        placeholder="Enter Your Name"
+                                        placeholder="Enter Name"
                                         onChange={this.onChange.bind(this)}
                                         value={
                                             product === null ? "" : product.name
@@ -64,17 +95,43 @@ class FormProduct extends React.Component {
                                         readOnly={isCreate ? false : true}
                                     />
                                 </div>
+                                {/* Qty */}
+                                <div className="wrap-input100 bg1 rs1-wrap-input100">
+                                    <span className="label-input100">
+                                        QTY{" "}
+                                        <span
+                                            className={
+                                                errs.qty === ""
+                                                    ? "hidden"
+                                                    : "text-error"
+                                            }
+                                        >
+                                            {errs.qty}
+                                        </span>
+                                    </span>
+                                    <input
+                                        className="input100"
+                                        type="number"
+                                        name="qty"
+                                        placeholder="Enter Qty"
+                                        onChange={this.onChange.bind(this)}
+                                        value={
+                                            product === null ? "" : product.qty
+                                        }
+                                    />
+                                </div>
+
                                 <div className="wrap-input100 bg1 rs1-wrap-input100">
                                     <span className="label-input100">
                                         IMPORT PRICE{" "}
                                         <span
                                             className={
-                                                errs.email === ""
+                                                errs.importPrice === ""
                                                     ? "hidden"
                                                     : "text-error"
                                             }
                                         >
-                                            {errs.email}
+                                            {errs.importPrice}
                                         </span>
                                     </span>
                                     <input
@@ -144,230 +201,68 @@ class FormProduct extends React.Component {
                                         }
                                     />
                                 </div>
-
-                                {/* Import price */}
                                 <div className="wrap-input100 bg1 rs1-wrap-input100">
                                     <span className="label-input100">
-                                        EXPIRATION DATE *{" "}
+                                        RECEIPT DATE{" "}
                                         <span
                                             className={
-                                                errs.email === ""
+                                                errs.receiptDate === ""
                                                     ? "hidden"
                                                     : "text-error"
                                             }
                                         >
-                                            {errs.email}
+                                            {errs.receiptDate}
                                         </span>
                                     </span>
                                     <input
                                         className="input100"
-                                        type="date"
+                                        type="text"
+                                        name="receiptDate"
+                                        placeholder="Enter Number Phone"
+                                        onChange={this.onChange.bind(this)}
+                                        value={
+                                            product === null
+                                                ? ""
+                                                : Moment(
+                                                      product.receiptDate
+                                                  ).format("MMM Do YYYY")
+                                        }
+                                        readOnly
+                                    />
+                                </div>
+
+                                <div className="wrap-input100 bg1 rs1-wrap-input100">
+                                    <span className="label-input100">
+                                        EXPIRATION DATE{" "}
+                                        <span
+                                            className={
+                                                errs.expirationDate === ""
+                                                    ? "hidden"
+                                                    : "text-error"
+                                            }
+                                        >
+                                            {errs.expirationDate}
+                                        </span>
+                                    </span>
+                                    <input
+                                        className="input100"
+                                        type="text"
                                         name="expirationDate"
                                         placeholder="Enter Your Email"
                                         onChange={this.onChange.bind(this)}
                                         value={
                                             product === null
                                                 ? ""
-                                                : product.email
+                                                : Moment(
+                                                      product.expirationDate
+                                                  ).format("MMM Do YYYY")
                                         }
                                         readOnly
                                     />
                                 </div>
 
-                                <div className="wrap-input100 bg1 rs1-wrap-input100">
-                                    <span className="label-input100">
-                                        RECEIPT DATE{" "}
-                                        <span
-                                            className={
-                                                errs.phone === ""
-                                                    ? "hidden"
-                                                    : "text-error"
-                                            }
-                                        >
-                                            {errs.phone}
-                                        </span>
-                                    </span>
-                                    <input
-                                        className="input100"
-                                        type="date"
-                                        name="expirationDate"
-                                        placeholder="Enter Number Phone"
-                                        onChange={this.onChange.bind(this)}
-                                        value={
-                                            product === null
-                                                ? ""
-                                                : product.phone
-                                        }
-                                        readOnly
-                                    />
-                                </div>
-
-                                {/* Category */}
-                                <div className="wrap-input100 bg1 rs1-wrap-input100">
-                                    <span className="label-input100">
-                                        CATEGORY *{" "}
-                                        <span
-                                            className={
-                                                errs.address === ""
-                                                    ? "hidden"
-                                                    : "text-error"
-                                            }
-                                        >
-                                            {errs.address}
-                                        </span>
-                                    </span>
-                                    <div id="app-cover">
-                                        <div id="select-box">
-                                            <input
-                                                type="checkbox"
-                                                id="options-view-button"
-                                            />
-                                            <div id="select-button" class="brd">
-                                                <div id="selected-value">
-                                                    <span>
-                                                        Select a platform
-                                                    </span>
-                                                </div>
-                                                <div id="chevrons">
-                                                    <i class="fas fa-chevron-up"></i>
-                                                    <i class="fas fa-chevron-down"></i>
-                                                </div>
-                                            </div>
-                                            <div id="options">
-                                                <div class="option">
-                                                    <input
-                                                        class="s-c top"
-                                                        type="radio"
-                                                        name="platform"
-                                                        value="codepen"
-                                                    />
-                                                    <input
-                                                        class="s-c bottom"
-                                                        type="radio"
-                                                        name="platform"
-                                                        value="codepen"
-                                                    />
-                                                    <i class="fab fa-codepen"></i>
-                                                    <span class="label">
-                                                        CodePen
-                                                    </span>
-                                                    <span class="opt-val">
-                                                        CodePen
-                                                    </span>
-                                                </div>
-                                                <div class="option">
-                                                    <input
-                                                        class="s-c top"
-                                                        type="radio"
-                                                        name="platform"
-                                                        value="dribbble"
-                                                    />
-                                                    <input
-                                                        class="s-c bottom"
-                                                        type="radio"
-                                                        name="platform"
-                                                        value="dribbble"
-                                                        defaultChecked
-                                                    />
-                                                    <i class="fab fa-dribbble"></i>
-                                                    <span class="label">
-                                                        Dribbble
-                                                    </span>
-                                                    <span class="opt-val">
-                                                        Dribbble
-                                                    </span>
-                                                </div>
-
-                                                <div id="option-bg"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {/* Supplier */}
-                                <div className="wrap-input100 bg1 rs1-wrap-input100">
-                                    <span className="label-input100">
-                                        SUPPLIER *{" "}
-                                        <span
-                                            className={
-                                                errs.address === ""
-                                                    ? "hidden"
-                                                    : "text-error"
-                                            }
-                                        >
-                                            {errs.address}
-                                        </span>
-                                    </span>
-                                    <div id="app-cover">
-                                        <div id="select-box">
-                                            <input
-                                                type="checkbox"
-                                                id="options-view-button"
-                                            />
-                                            <div
-                                                id="select-button"
-                                                className="brd"
-                                            >
-                                                <div id="selected-value">
-                                                    <span>
-                                                        Select a platform
-                                                    </span>
-                                                </div>
-                                                <div id="chevrons">
-                                                    <i className="fas fa-chevron-up"></i>
-                                                    <i className="fas fa-chevron-down"></i>
-                                                </div>
-                                            </div>
-                                            <div id="options">
-                                                <div className="option">
-                                                    <input
-                                                        className="s-c top"
-                                                        type="radio"
-                                                        name="platform"
-                                                        value="codepen"
-                                                    />
-                                                    <input
-                                                        className="s-c bottom"
-                                                        type="radio"
-                                                        name="platform"
-                                                        value="codepen"
-                                                    />
-                                                    <i className="fab fa-codepen"></i>
-                                                    <span className="label">
-                                                        CodePen
-                                                    </span>
-                                                    <span className="opt-val">
-                                                        CodePen
-                                                    </span>
-                                                </div>
-                                                <div className="option">
-                                                    <input
-                                                        className="s-c top"
-                                                        type="radio"
-                                                        name="platform"
-                                                        value="dribbble"
-                                                    />
-                                                    <input
-                                                        className="s-c bottom"
-                                                        type="radio"
-                                                        name="platform"
-                                                        value="dribbble"
-                                                    />
-                                                    <i className="fab fa-dribbble"></i>
-                                                    <span className="label">
-                                                        Dribbble
-                                                    </span>
-                                                    <span className="opt-val">
-                                                        Dribbble
-                                                    </span>
-                                                </div>
-
-                                                <div id="option-bg"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* {isCreate ? (
+                                {/* Status */}
+                                {isCreate ? (
                                     ""
                                 ) : (
                                     <div className="wrap-input100 input100-select bg1">
@@ -394,7 +289,7 @@ class FormProduct extends React.Component {
                                                     <span>
                                                         <span></span>
                                                     </span>
-                                                    Co-operate
+                                                    Exist
                                                 </label>
                                             </div>
                                             <div>
@@ -416,13 +311,226 @@ class FormProduct extends React.Component {
                                                     <span>
                                                         <span></span>
                                                     </span>
-                                                    Uncooperative
+                                                    Not Exist
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
-                                )} */}
+                                )}
 
+                                {/* Description */}
+                                <div className="wrap-input100 bg1">
+                                    <span className="label-input100">
+                                        DESCRIPTION{" "}
+                                        <span
+                                            className={
+                                                errs.description === ""
+                                                    ? "hidden"
+                                                    : "text-error"
+                                            }
+                                        >
+                                            {errs.description}
+                                        </span>
+                                    </span>
+                                    <textarea
+                                        className="input100"
+                                        name="description"
+                                        placeholder="Description..."
+                                        onChange={this.onChange.bind(this)}
+                                        value={
+                                            product === null
+                                                ? ""
+                                                : product.description
+                                        }
+                                    ></textarea>
+                                </div>
+
+                                {/* Category */}
+                                {isCreate ? (
+                                    <div className="wrap-input100 bg1">
+                                        <span className="label-input100">
+                                            CATEGORY *{" "}
+                                            <span
+                                                className={
+                                                    errs.category === ""
+                                                        ? "hidden"
+                                                        : "text-error"
+                                                }
+                                            >
+                                                {errs.category}
+                                            </span>
+                                        </span>
+                                        <div id="app-cover">
+                                            <div id="select-box">
+                                                <input
+                                                    type="checkbox"
+                                                    id="options-view-button"
+                                                />
+                                                <div
+                                                    id="select-button"
+                                                    className="brd"
+                                                >
+                                                    <div id="selected-value">
+                                                        <span>
+                                                            Select a Category
+                                                        </span>
+                                                    </div>
+                                                    <div id="chevrons">
+                                                        <i className="fas fa-chevron-up"></i>
+                                                        <i className="fas fa-chevron-down"></i>
+                                                    </div>
+                                                </div>
+                                                <div id="options">
+                                                    {categories.map(
+                                                        (category, key) => {
+                                                            return (
+                                                                <div
+                                                                    key={key}
+                                                                    className="option"
+                                                                >
+                                                                    <input
+                                                                        className="s-c top"
+                                                                        type="radio"
+                                                                        name="category"
+                                                                        value={
+                                                                            category.name
+                                                                        }
+                                                                        onChange={this.onChange.bind(
+                                                                            this
+                                                                        )}
+                                                                    />
+                                                                    <input
+                                                                        className="s-c bottom"
+                                                                        type="radio"
+                                                                        name="category"
+                                                                        value={
+                                                                            category.name
+                                                                        }
+                                                                        onChange={this.onChange.bind(
+                                                                            this
+                                                                        )}
+                                                                    />
+                                                                    <span className="label">
+                                                                        {
+                                                                            category.name
+                                                                        }
+                                                                    </span>
+                                                                    <span className="opt-val">
+                                                                        {
+                                                                            category.name
+                                                                        }
+                                                                    </span>
+                                                                </div>
+                                                            );
+                                                        }
+                                                    )}
+
+                                                    <div id="option-bg"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="wrap-input100 bg1">
+                                        <span className="label-input100">
+                                            CATEGORY *{" "}
+                                            <span
+                                                className={
+                                                    errs.category === ""
+                                                        ? "hidden"
+                                                        : "text-error"
+                                                }
+                                            >
+                                                {errs.category}
+                                            </span>
+                                        </span>
+                                        <div id="app-cover">
+                                            <div id="select-box">
+                                                <input
+                                                    type="checkbox"
+                                                    id="options-view-button"
+                                                />
+                                                <div
+                                                    id="select-button"
+                                                    className="brd"
+                                                >
+                                                    <div id="selected-value">
+                                                        <span>
+                                                            Select a Category
+                                                        </span>
+                                                    </div>
+                                                    <div id="chevrons">
+                                                        <i className="fas fa-chevron-up"></i>
+                                                        <i className="fas fa-chevron-down"></i>
+                                                    </div>
+                                                </div>
+                                                <div id="options">
+                                                    {categories.map(
+                                                        (category, key) => {
+                                                            return (
+                                                                <div
+                                                                    key={key}
+                                                                    className="option"
+                                                                >
+                                                                    <input
+                                                                        className="s-c top"
+                                                                        type="radio"
+                                                                        name="category"
+                                                                        value={
+                                                                            category.name
+                                                                        }
+                                                                        defaultChecked={
+                                                                            category.name ===
+                                                                            product
+                                                                                .category
+                                                                                .name
+                                                                                ? true
+                                                                                : false
+                                                                        }
+                                                                        onChange={this.onChange.bind(
+                                                                            this
+                                                                        )}
+                                                                    />
+                                                                    <input
+                                                                        className="s-c bottom"
+                                                                        type="radio"
+                                                                        name="category"
+                                                                        value={
+                                                                            category.name
+                                                                        }
+                                                                        defaultChecked={
+                                                                            category.name ===
+                                                                            product
+                                                                                .category
+                                                                                .name
+                                                                                ? true
+                                                                                : false
+                                                                        }
+                                                                        onChange={this.onChange.bind(
+                                                                            this
+                                                                        )}
+                                                                    />
+                                                                    <span className="label">
+                                                                        {
+                                                                            category.name
+                                                                        }
+                                                                    </span>
+                                                                    <span className="opt-val">
+                                                                        {
+                                                                            category.name
+                                                                        }
+                                                                    </span>
+                                                                </div>
+                                                            );
+                                                        }
+                                                    )}
+
+                                                    <div id="option-bg"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                                 <div className="container-contact100-form-btn">
                                     <button
                                         className="btn-handle btn-login"
@@ -443,7 +551,9 @@ class FormProduct extends React.Component {
 const mapStateToProps = store => {
     return {
         auth: store.auth,
-        prod: store.product
+        prod: store.product,
+        category: store.category,
+        supplier: store.supplier
     };
 };
 

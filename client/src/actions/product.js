@@ -52,21 +52,21 @@ export const createProduct = (data, token, history) => async dispatch => {
     const body = JSON.stringify(data);
     try {
         const res = await axios.post("/api/product", body, config);
+        console.log("res data = ", res.data);
         dispatch({
             type: CREATE_PRODUCT_SUCCESS,
-            payload: res.data
+            payload: res.data.product
         });
         history.push("/dashboard/product/data");
     } catch (err) {
         const error = err.response.data.errors;
-
+        console.log(error);
         if (error) {
             dispatch({
                 type: CREATE_PRODUCT_ERROR,
                 payload: error
             });
         }
-
         dispatch({
             type: CREATE_PRODUCT_FAIL
         });
@@ -74,7 +74,7 @@ export const createProduct = (data, token, history) => async dispatch => {
 };
 
 // Delete product
-export const deleteProduct = (id, token) => async dispatch => {
+export const deleteProduct = (id, token, history) => async dispatch => {
     const config = {
         headers: {
             "x-auth-token": token
@@ -86,15 +86,6 @@ export const deleteProduct = (id, token) => async dispatch => {
             type: DELETE_PRODUCT,
             payload: id
         });
-        refreshProduct();
-    } catch (err) {
-        const error = err.response.data.errors;
-
-        if (error) {
-            dispatch({
-                type: CREATE_PRODUCT_ERROR,
-                payload: error
-            });
-        }
-    }
+        history.push("/dashboard/product/data");
+    } catch (err) {}
 };

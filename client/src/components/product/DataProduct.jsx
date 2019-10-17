@@ -19,8 +19,15 @@ class DataProduct extends React.Component {
         await this.props.dispatch(getProducts(token));
     }
 
-    edit(data) {
+    edit(data, inventory) {
         data.isCreate = false;
+        let stock;
+        for (stock in inventory) {
+            if (stock === "product") {
+                continue;
+            }
+            data[stock] = inventory[stock];
+        }
         this.props.dispatch(changeData(data));
     }
 
@@ -34,6 +41,7 @@ class DataProduct extends React.Component {
     render() {
         const products = this.props.prod.products;
         const stocks = this.props.inventory.stocks;
+
         return (
             <Fragment>
                 <section id="content-area">
@@ -42,6 +50,7 @@ class DataProduct extends React.Component {
                             <Link
                                 to="/dashboard/product/form"
                                 className="btn btn-green"
+                                onClick={this.refresh.bind(this)}
                             >
                                 + New Product
                             </Link>
@@ -107,7 +116,8 @@ class DataProduct extends React.Component {
                                                         to="/dashboard/product/form"
                                                         onClick={this.edit.bind(
                                                             this,
-                                                            prd
+                                                            prd,
+                                                            stocks[key]
                                                         )}
                                                     >
                                                         <i className="fas fa-edit"></i>
@@ -116,7 +126,8 @@ class DataProduct extends React.Component {
                                                         className="pointer"
                                                         onClick={this.delete.bind(
                                                             this,
-                                                            prd._id
+                                                            prd._id,
+                                                            this.props.history
                                                         )}
                                                     >
                                                         <i className="fas fa-trash-alt"></i>

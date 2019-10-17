@@ -122,7 +122,6 @@ export const checkSession = history => async dispatch => {
 
 // Logout / Clear Profile
 export const logout = (token, history) => async dispatch => {
-    console.log(token);
     const config = {
         headers: {
             "x-auth-token": token
@@ -130,7 +129,6 @@ export const logout = (token, history) => async dispatch => {
     };
     try {
         const res = await axios.get("/api/users/logout", config);
-        // console.log(res);
         if (res.status === 200) {
             dispatch({ type: LOGOUT });
             history.push("/login");

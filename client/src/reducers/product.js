@@ -31,7 +31,9 @@ export default function(state = initialState, action) {
         case CHANGE_DATA_PRODUCT: {
             let isExists =
                 payload.isExists === "true" || payload.isExists === true;
+            let isDamage = !isExists;
             payload.isExists = isExists;
+            payload.isDamage = isDamage;
             return {
                 ...state,
                 product: payload
