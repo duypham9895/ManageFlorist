@@ -43,17 +43,17 @@ export const refreshProduct = () => dispatch => {
 
 // Create new a Supplier
 export const createProduct = (data, token, history) => async dispatch => {
-    console.log(data.isExists);
     let config = {
         headers: {
             Accept: "application/json"
         }
     };
-
-    let form = new FormData();
-    form.append("image", data.image);
-    let image = await axios.post("/api/uploadProduct", form, config);
-    data.image = image.data;
+    if (typeof data.image === Object) {
+        let form = new FormData();
+        form.append("image", data.image);
+        let image = await axios.post("/api/uploadProduct", form, config);
+        data.image = image.data;
+    }
 
     const body = JSON.stringify(data);
     try {
@@ -65,7 +65,6 @@ export const createProduct = (data, token, history) => async dispatch => {
         };
 
         const res = await axios.post("/api/product", body, config);
-        console.log("2");
         dispatch({
             type: CREATE_PRODUCT_SUCCESS,
             payload: res.data.product

@@ -381,6 +381,7 @@ class FormProduct extends React.Component {
                                         name="image"
                                         type="file"
                                         onChange={this.onChange.bind(this)}
+                                        // files={product.image}
                                     ></input>
                                 </div>
 

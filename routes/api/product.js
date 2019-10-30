@@ -19,25 +19,25 @@ const GoodsReceiptDetail = require("../../models/GoodsReceiptDetail");
 router.post(
     "/",
     [
-        auth
-        // check("name", "Name is required")
-        //     .not()
-        //     .isEmpty(),
-        // check("importPrice", "Import Price is required").isLength({
-        //     min: 1
-        // }),
-        // check("sellingPrice", "Selling Price is required").isLength({
-        //     min: 1
-        // }),
-        // check("expired", "Expired is required")
-        //     .not()
-        //     .isEmpty(),
-        // check("qty", "Expired is required")
-        //     .not()
-        //     .isEmpty(),
-        // check("image", "Images is required")
-        //     .not()
-        //     .isEmpty()
+        auth,
+        check("name", "Name is required")
+            .not()
+            .isEmpty(),
+        check("importPrice", "Import Price is required").isLength({
+            min: 1
+        }),
+        check("sellingPrice", "Selling Price is required").isLength({
+            min: 1
+        }),
+        check("expired", "Expired is required")
+            .not()
+            .isEmpty(),
+        check("qty", "Expired is required")
+            .not()
+            .isEmpty(),
+        check("image", "Images is required")
+            .not()
+            .isEmpty()
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -129,7 +129,6 @@ router.post(
             let product = await Product.findOne({ name });
             let inventory = await Inventory.findOne({ product: product });
             if (product) {
-                console.log("if");
                 product.name = name;
                 product.description = description;
                 product.image = image;
@@ -141,7 +140,6 @@ router.post(
 
                 await product.save();
             } else {
-                console.log("else");
                 product = new Product({
                     name,
                     description,
@@ -179,8 +177,6 @@ router.post(
 
                 await inventory.save();
             }
-            console.log(product.isExists);
-            console.log(typeof product.isExists);
             if (product.isExists === true) {
                 // Goods Receipt
                 let total = qty * product.importPrice;
