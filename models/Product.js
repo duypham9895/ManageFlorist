@@ -9,14 +9,10 @@ let ProductSchema = new Schema({
     description: {
         type: String
     },
-    images: [
-        {
-            image: {
-                type: String,
-                required: true
-            }
-        }
-    ],
+    image: {
+        type: String,
+        required: true
+    },
     importPrice: {
         type: Number,
         required: true

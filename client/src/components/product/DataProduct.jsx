@@ -76,7 +76,7 @@ class DataProduct extends React.Component {
                                                 ""
                                             )}
                                             <img
-                                                src={prd.images[0].image}
+                                                src={prd.image}
                                                 alt={prd.name}
                                                 className="product-img-list"
                                             />

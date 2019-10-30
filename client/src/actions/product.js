@@ -43,16 +43,29 @@ export const refreshProduct = () => dispatch => {
 
 // Create new a Supplier
 export const createProduct = (data, token, history) => async dispatch => {
-    const config = {
+    console.log(data.isExists);
+    let config = {
         headers: {
-            "Content-Type": "application/json",
-            "x-auth-token": token
+            Accept: "application/json"
         }
     };
+
+    let form = new FormData();
+    form.append("image", data.image);
+    let image = await axios.post("/api/uploadProduct", form, config);
+    data.image = image.data;
+
     const body = JSON.stringify(data);
     try {
+        config = {
+            headers: {
+                "Content-Type": "application/json",
+                "x-auth-token": token
+            }
+        };
+
         const res = await axios.post("/api/product", body, config);
-        console.log("res data = ", res.data);
+        console.log("2");
         dispatch({
             type: CREATE_PRODUCT_SUCCESS,
             payload: res.data.product

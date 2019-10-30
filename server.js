@@ -1,6 +1,7 @@
 const express = require("express");
 const connectDB = require("./config/db");
 const path = require("path");
+const logger = require("morgan");
 // const config = require("config");
 
 const app = express();
@@ -10,11 +11,16 @@ const app = express();
 // Connect Database
 connectDB();
 
+// require("./routes")(app);
+
 // Init Middleware
 app.use(express.json({ extended: false }));
 app.use(require("./middleware/cors"));
 app.set("trust proxy", true);
 
+// require("./routes/index")(app);
+
+app.use("/api", require("./routes/index"));
 // Define routes
 // /// About Auth & User
 app.use("/api/users", require("./routes/api/users"));
@@ -34,6 +40,10 @@ app.use("/api/discount", require("./routes/api/discount"));
 
 // /// About invoice
 app.use("/api/invoice", require("./routes/api/invoice"));
+
+// /// About Goods Receipt
+app.use("/api/receipt", require("./routes/api/goodsReceipt"));
+// app.use("/api/receipt", require("./routes/api/goodsReceipt"));
 
 // Server static assets in production
 if (process.env.NODE_ENV === "production") {

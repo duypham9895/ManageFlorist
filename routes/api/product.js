@@ -19,38 +19,28 @@ const GoodsReceiptDetail = require("../../models/GoodsReceiptDetail");
 router.post(
     "/",
     [
-        auth,
-        check("name", "Name is required")
-            .not()
-            .isEmpty(),
-        check("importPrice", "Import Price is required").isLength({
-            min: 1
-        }),
-        check("sellingPrice", "Selling Price is required").isLength({
-            min: 1
-        }),
-        check("expired", "Expired is required")
-            .not()
-            .isEmpty(),
-        check("qty", "Expired is required")
-            .not()
-            .isEmpty(),
-        check("images", "Images is required")
-            .not()
-            .isEmpty()
+        auth
+        // check("name", "Name is required")
+        //     .not()
+        //     .isEmpty(),
+        // check("importPrice", "Import Price is required").isLength({
+        //     min: 1
+        // }),
+        // check("sellingPrice", "Selling Price is required").isLength({
+        //     min: 1
+        // }),
+        // check("expired", "Expired is required")
+        //     .not()
+        //     .isEmpty(),
+        // check("qty", "Expired is required")
+        //     .not()
+        //     .isEmpty(),
+        // check("image", "Images is required")
+        //     .not()
+        //     .isEmpty()
     ],
     async (req, res) => {
-        // console.log("first api product");
         const errors = validationResult(req);
-        // console.log(errors);
-        // console.log(
-        //     req.body.name,
-        //     req.body.importPrice,
-        //     req.body.sellingPrice,
-        //     req.body.expired,
-        //     req.body.images
-        // );
-        // console.log(req.body);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
@@ -58,7 +48,7 @@ router.post(
         const {
             name,
             description,
-            images,
+            image,
             importPrice,
             sellingPrice,
             expired,
@@ -70,7 +60,6 @@ router.post(
             supplier
         } = req.body;
         let account = await Account.findById(req.account.id);
-        // console.log(account);
         let member = await Member.findOne({ account: account });
         // Check if account is not member
         if (!member) {
@@ -78,11 +67,13 @@ router.post(
                 .status(401)
                 .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
         }
-        // let findCategory = await Category.findOne(category);
-        let findSupplier = await Supplier.findOne({ name: supplier });
+
+        let findSupplier = {};
         let findCategory = {};
+
         if (dateCreate === undefined) {
             findCategory = await Category.findOne({ name: category });
+            findSupplier = await Supplier.findOne({ name: supplier });
             if (
                 !findCategory ||
                 !findSupplier ||
@@ -108,7 +99,12 @@ router.post(
             }
         } else {
             findCategory = await Category.findOne(category);
-            if (!findCategory || Number(sellingPrice) < Number(importPrice)) {
+            findSupplier = await Category.findOne(supplier);
+            if (
+                !findCategory ||
+                !findSupplier ||
+                Number(sellingPrice) < Number(importPrice)
+            ) {
                 return res.status(400).json({
                     errors: [
                         {
@@ -117,12 +113,12 @@ router.post(
                         }
                     ]
                 });
-            } else if (!findCategory.isExists) {
+            } else if (!findCategory.isExists || !findSupplier.isExists) {
                 return res.status(400).json({
                     errors: [
                         {
                             msg:
-                                "Information about Category is not exists. Please check again"
+                                "Information about Category or Supplier is not exists. Please check again"
                         }
                     ]
                 });
@@ -133,9 +129,10 @@ router.post(
             let product = await Product.findOne({ name });
             let inventory = await Inventory.findOne({ product: product });
             if (product) {
+                console.log("if");
                 product.name = name;
                 product.description = description;
-                product.images = images;
+                product.image = image;
                 product.importPrice = importPrice;
                 product.sellingPrice = sellingPrice;
                 product.expired = expired;
@@ -144,14 +141,16 @@ router.post(
 
                 await product.save();
             } else {
+                console.log("else");
                 product = new Product({
                     name,
                     description,
-                    images,
+                    image,
                     importPrice,
                     sellingPrice,
                     expired,
                     category: findCategory
+                    // isExists: true
                 });
 
                 await product.save();
@@ -160,7 +159,7 @@ router.post(
             // Calculate expiration date
             let expirationDate = new Date();
             expirationDate.setDate(expirationDate.getDate() + Number(expired));
-            console.log(isDamage);
+
             if (inventory) {
                 // Update Inventory
                 inventory.product = product;
@@ -180,9 +179,9 @@ router.post(
 
                 await inventory.save();
             }
-            // console.log(isExists);
-            // console.log(typeof isExists);
-            if (isExists === undefined) {
+            console.log(product.isExists);
+            console.log(typeof product.isExists);
+            if (product.isExists === true) {
                 // Goods Receipt
                 let total = qty * product.importPrice;
                 let goodsReceipt = new GoodsReceipt({
@@ -298,7 +297,6 @@ router.delete("/:id", auth, async (req, res) => {
     } catch (err) {
         console.error(err.message);
         if (err.kind === "ObjectId") {
-            console.log("test");
             return res.status(404).json({ msg: "Product not found" });
         }
         return res.status(500).send("Server Error");
