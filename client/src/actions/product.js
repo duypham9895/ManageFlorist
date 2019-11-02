@@ -48,7 +48,7 @@ export const createProduct = (data, token, history) => async dispatch => {
             Accept: "application/json"
         }
     };
-    if (typeof data.image === Object) {
+    if (typeof data.image === "object") {
         let form = new FormData();
         form.append("image", data.image);
         let image = await axios.post("/api/uploadProduct", form, config);

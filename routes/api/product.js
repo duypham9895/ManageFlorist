@@ -34,10 +34,10 @@ router.post(
             .isEmpty(),
         check("qty", "Expired is required")
             .not()
-            .isEmpty(),
-        check("image", "Images is required")
-            .not()
             .isEmpty()
+        // check("image", "Image is required")
+        //     .not()
+        //     .isEmpty()
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -147,8 +147,8 @@ router.post(
                     importPrice,
                     sellingPrice,
                     expired,
-                    category: findCategory
-                    // isExists: true
+                    category: findCategory,
+                    isExists: true
                 });
 
                 await product.save();

@@ -555,10 +555,11 @@ table tbody td {
 }
 table tbody td .product-img {
     display: inline-block;
-    width: 50px;
+    width: 30px;
     position: absolute;
     top: 6px;
-    left: 10px;
+    left: 20px;
+    border-radius: 50%;
 }
 table tbody td .logo {
     display: inline-block;

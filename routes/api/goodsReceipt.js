@@ -8,8 +8,6 @@ const Account = require("../../models/Account");
 const Member = require("../../models/Member");
 const GoodsReceipt = require("../../models/GoodsReceipt");
 const GoodsReceiptDetail = require("../../models/GoodsReceiptDetail");
-const Product = require("../../models/Product");
-const Supplier = require("../../models/Supplier");
 
 // @route   GET api/receipt
 // @desc    GET all receipt
@@ -26,7 +24,7 @@ router.get("/", auth, async (req, res) => {
     }
 
     try {
-        const receipts = await GoodsReceipt.find().sort({ date: -1 });
+        const receipts = await GoodsReceiptDetail.find().sort({ date: -1 });
 
         return res.json(receipts);
     } catch (error) {

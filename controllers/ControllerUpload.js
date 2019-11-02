@@ -4,14 +4,12 @@ let imageDetails = {};
 var self = (module.exports = {
     uploadSingleFile: async (req, res) => {
         //req.file.path chính là đường dẫn của file khi upload bằng multer
-        console.log(req.file.path);
         cloudinary.uploadProduct(req.file.path).then(result => {
             imageDetails = {
                 imageName: req.body.imageName || "",
                 cloudImage: result.url,
                 imageId: result.id
             };
-            // console.log(imageDetails);
             res.json(imageDetails.cloudImage);
             // res.json(req.file, imageDetails);
         });
