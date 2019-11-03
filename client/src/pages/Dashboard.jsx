@@ -10,13 +10,10 @@ import Category from "../components/category/Category.jsx";
 import Orders from "../components/orders/Orders.jsx";
 import Customer from "../components/customer/Customer.jsx";
 import Product from "../components/product/Product.jsx";
-
 import Supplier from "../components/supplier/Supplier.jsx";
-// import FormSupplier from "../components/supplier/FormSupplier.jsx";
-
 import Inventory from "../components/inventory/Inventory.jsx";
 import Staff from "../components/staff/Staff.jsx";
-import Profile from "../components/profile/Profile.jsx";
+import Discount from "../components/discount/Discount.jsx";
 
 class Dashboard extends React.Component {
     render() {
@@ -49,19 +46,14 @@ class Dashboard extends React.Component {
                                 path="/dashboard/supplier"
                                 component={Supplier}
                             />
-                            {/* <Route
-                            path="/dashboard/form/supplier"
-                            // render={props => <FormSupplier {...props} />}
-                            component={FormSupplier}
-                        /> */}
                             <Route
                                 path="/dashboard/inventory"
                                 component={Inventory}
                             />
                             <Route path="/dashboard/staff" component={Staff} />
                             <Route
-                                path="/dashboard/profile"
-                                component={Profile}
+                                path="/dashboard/discount"
+                                component={Discount}
                             />
                         </Switch>
                     </Fragment>

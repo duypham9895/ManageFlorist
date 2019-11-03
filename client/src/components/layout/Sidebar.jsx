@@ -17,7 +17,8 @@ class Sidebar extends React.Component {
                 supplier: "",
                 inventory: "",
                 staff: "",
-                profile: ""
+                discount: "",
+                decentralization: ""
             }
         };
     }
@@ -56,8 +57,6 @@ class Sidebar extends React.Component {
                     home: "active"
                 }
             });
-
-            // return this.props.push("/dashboard/home");
         }
         this.setState({
             active: {
@@ -92,6 +91,13 @@ class Sidebar extends React.Component {
                             className={active.customer}
                         >
                             <i className="fas fa-user-tie"></i>Customer
+                        </Link>
+                        <Link
+                            onClick={this.active.bind(this, "discount")}
+                            to="/dashboard/discount/data"
+                            className={active.discount}
+                        >
+                            <i className="fas fa-percent"></i>Discount
                         </Link>
                         <Link
                             onClick={this.active.bind(this, "product")}
@@ -129,13 +135,16 @@ class Sidebar extends React.Component {
                         >
                             <i className="fas fa-users"></i>Staff
                         </Link>
+
                         <Link
-                            onClick={this.active.bind(this, "profile")}
-                            to="/dashboard/profile"
-                            className={active.profile}
+                            onClick={this.active.bind(this, "decentralization")}
+                            to="/dashboard/decentralization/data"
+                            className={active.decentralization}
                         >
-                            <i className="fas fa-user-circle"></i>Profile
+                            <i className="fas fa-user-shield"></i>
+                            Decentralization
                         </Link>
+
                         <Link
                             onClick={this.active.bind(this, "logout")}
                             to="/#"

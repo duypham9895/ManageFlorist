@@ -23,6 +23,10 @@ let DiscountSchema = new Schema({
         type: Date,
         required: true
     },
+    isExists: {
+        type: Boolean,
+        default: true
+    },
     dateCreate: {
         type: Date,
         default: Date.now
