@@ -18,7 +18,7 @@ class Sidebar extends React.Component {
                 inventory: "",
                 staff: "",
                 discount: "",
-                decentralization: ""
+                role: ""
             }
         };
     }
@@ -137,12 +137,12 @@ class Sidebar extends React.Component {
                         </Link>
 
                         <Link
-                            onClick={this.active.bind(this, "decentralization")}
-                            to="/dashboard/decentralization/data"
-                            className={active.decentralization}
+                            onClick={this.active.bind(this, "role")}
+                            to="/dashboard/role/data"
+                            className={active.role}
                         >
                             <i className="fas fa-user-shield"></i>
-                            Decentralization
+                            Role
                         </Link>
 
                         <Link

@@ -30,7 +30,7 @@ router.post(
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        const { code, qty, name } = req.body;
+        const { code, qty, name, isExists } = req.body;
 
         let account = await Account.findById(req.account.id);
         let member = await Member.findOne({ account: account });
@@ -39,7 +39,7 @@ router.post(
         if (!member) {
             return res
                 .status(401)
-                .json({ errors: [{ msg: "Your Account is Unauthorized a" }] });
+                .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
         }
 
         let findRole = await Role.findById(member.role);
@@ -47,16 +47,20 @@ router.post(
         if (findRole.name !== "ADMIN") {
             return res
                 .status(401)
-                .json({ errors: [{ msg: "Your Account is Unauthorized b" }] });
+                .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
         }
 
         try {
             let role = await Role.findOne({ code });
 
             if (role) {
-                return res
-                    .status(400)
-                    .json({ errors: [{ msg: "Role already exists" }] });
+                role.code = code;
+                role.name = name;
+                role.isExists = isExists;
+                role.qty = qty;
+
+                await role.save();
+                return res.json(role);
             }
 
             role = new Role({
@@ -74,5 +78,68 @@ router.post(
         }
     }
 );
+
+// @route    GET api/role
+// @desc     Get all role
+// @access   Private
+router.get("/", auth, async (req, res) => {
+    let account = await Account.findById(req.account.id);
+    let member = await Member.findOne({ account });
+
+    // Check if account is not member
+    if (!member) {
+        return res
+            .status(401)
+            .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
+    }
+
+    try {
+        const roles = await Role.find().sort({ date: -1 });
+        res.json(roles);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Server error");
+    }
+});
+
+// @route    DELETE api/role/:id
+// @desc     Delete a post
+// @access   Private
+router.delete("/:id", auth, async (req, res) => {
+    try {
+        let role = await Role.findById(req.params.id);
+
+        if (!role) {
+            return res.status(404).json({ msg: "Role not found" });
+        }
+
+        // Check ADMIN
+        let account = await Account.findById(req.account.id);
+        let member = await Member.findOne({ account });
+
+        // Check if account is not member
+        if (!member) {
+            return res
+                .status(401)
+                .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
+        }
+
+        if (member.role.name !== "ADMIN") {
+            return res
+                .status(401)
+                .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
+        }
+        role.isExists = false;
+        await role.save();
+
+        res.json({ msg: "Role removed" });
+    } catch (err) {
+        console.error(err.message);
+        if (err.kind === "ObjectId") {
+            return res.status(404).json({ msg: "Role not found" });
+        }
+        res.status(500).send("Server Error");
+    }
+});
 
 module.exports = router;
