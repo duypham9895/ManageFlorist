@@ -1,5 +1,6 @@
 import {
     GET_USERS,
+    GET_USER,
     CHANGE_DATA_USER,
     CREATE_USER_SUCCESS,
     CREATE_USER_ERROR,
@@ -24,6 +25,21 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 users: payload,
+                loading: false
+            };
+        }
+
+        case GET_USER: {
+            let temp;
+            for (temp in payload.account) {
+                payload[temp] = payload.account[temp];
+            }
+
+            payload["code"] = payload.role.code;
+            return {
+                ...state,
+                user: payload,
+                isCreate: false,
                 loading: false
             };
         }

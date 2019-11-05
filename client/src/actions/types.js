@@ -57,6 +57,7 @@ export const DELETE_ROLE = "DELETE_ROLE";
 export const REFRESH_ROLE = "REFRESH_ROLE";
 
 export const GET_USERS = "GET_USERS";
+export const GET_USER = "GET_USER";
 export const CHANGE_DATA_USER = "CHANGE_DATA_USER";
 export const CREATE_USER_SUCCESS = "CREATE_USER_SUCCESS";
 export const CREATE_USER_ERROR = "CREATE_USER_ERROR";

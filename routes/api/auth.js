@@ -97,7 +97,7 @@ router.post(
                     }
 
                     await account.save();
-
+                    // console.log("post api auth");
                     return res.status(200).json(token);
                 }
             );
@@ -128,7 +128,7 @@ router.put("/", async (req, res) => {
             if (req.body.token !== account.token) {
                 return res.sendStatus(400);
             }
-            return res.sendStatus(200);
+            return res.status(200).send(id);
         } else {
             return res.sendStatus(400);
         }

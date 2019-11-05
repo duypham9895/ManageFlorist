@@ -70,6 +70,7 @@ export const login = (username, password) => async dispatch => {
     const body = JSON.stringify({ username, password });
     try {
         const res = await axios.post("/api/auth", body, config);
+        // console.log(res.data);
         setCookie("florist", res.data, 1);
         dispatch({
             type: LOGIN_SUCCESS,
@@ -105,7 +106,10 @@ export const checkSession = history => async dispatch => {
         if (res.status === 200) {
             dispatch({
                 type: LOGIN_SUCCESS,
-                payload: token
+                payload: {
+                    token: token,
+                    id: res.data
+                }
             });
         }
     } catch (err) {

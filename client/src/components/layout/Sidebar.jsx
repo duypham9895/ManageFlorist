@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 import { logout } from "../../actions/auth";
+import { getUser } from "../../actions/user";
 
 class Sidebar extends React.Component {
     constructor(props) {
@@ -23,15 +24,22 @@ class Sidebar extends React.Component {
             }
         };
     }
-    active(value, e) {
+
+    sleep(milliseconds) {
+        return new Promise(resolve => setTimeout(resolve, milliseconds));
+    }
+
+    async active(value, e) {
+        let token = this.props.auth.token;
+        let id = this.props.auth.id;
+
         if (value === "logout") {
-            return this.props.dispatch(
-                logout(this.props.auth.token, this.props.history)
-            );
+            return this.props.dispatch(logout(token, this.props.history));
         }
 
         if (value === "profile") {
-            console.log("profile asdasdasd");
+            this.props.dispatch(getUser(token, id));
+            this.props.push("/dashboard/staff/form");
         }
         let temp;
         let active = { ...this.state.active };
@@ -152,7 +160,7 @@ class Sidebar extends React.Component {
 
                         <a
                             onClick={this.active.bind(this, "profile")}
-                            className={active.profile}
+                            className={active.profile + " pointer"}
                         >
                             <i className="fas fa-user-alt"></i>
                             Profile

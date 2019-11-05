@@ -1,6 +1,7 @@
 import axios from "axios";
 import {
     GET_USERS,
+    GET_USER,
     CHANGE_DATA_USER,
     CREATE_USER_SUCCESS,
     CREATE_USER_ERROR,
@@ -21,6 +22,25 @@ export const getUsers = token => async dispatch => {
         // console.log(res.data);
         dispatch({
             type: GET_USERS,
+            payload: res.data
+        });
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+// Get Users
+export const getUser = (token, id) => async dispatch => {
+    try {
+        const config = {
+            headers: {
+                "x-auth-token": token
+            }
+        };
+        const res = await axios.get(`/api/users/${id}`, config);
+        console.log(res.data);
+        dispatch({
+            type: GET_USER,
             payload: res.data
         });
     } catch (error) {

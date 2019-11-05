@@ -14,6 +14,7 @@ import {
 const initialState = {
     token: null,
     isAuthenticated: null,
+    id: null,
     loading: true,
     user: null,
     msg: {
@@ -57,12 +58,12 @@ export default function(state = initialState, action) {
             };
         case LOGIN_SUCCESS:
             let loginSuccess = { ...state.msg.login };
-
             loginSuccess.password = "";
             loginSuccess.username = "";
             return {
                 ...state,
-                token: payload,
+                token: payload.token,
+                id: payload.id,
                 isAuthenticated: true,
                 loading: false,
                 msg: { ...state.msg, login: loginSuccess }
@@ -129,6 +130,7 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 token: null,
+                id: null,
                 isAuthenticated: false,
                 loading: false
             };
