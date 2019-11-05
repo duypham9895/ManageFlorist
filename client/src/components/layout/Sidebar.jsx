@@ -39,7 +39,6 @@ class Sidebar extends React.Component {
 
         if (value === "profile") {
             this.props.dispatch(getUser(token, id));
-            this.props.push("/dashboard/staff/form");
         }
         let temp;
         let active = { ...this.state.active };
@@ -100,7 +99,7 @@ class Sidebar extends React.Component {
                         </Link>
                         <Link
                             onClick={this.active.bind(this, "customer")}
-                            to="/dashboard/customer"
+                            to="/dashboard/customer/data"
                             className={active.customer}
                         >
                             <i className="fas fa-user-tie"></i>Customer
@@ -158,13 +157,14 @@ class Sidebar extends React.Component {
                             Role
                         </Link>
 
-                        <a
+                        <Link
                             onClick={this.active.bind(this, "profile")}
                             className={active.profile + " pointer"}
+                            to="/dashboard/staff/form"
                         >
                             <i className="fas fa-user-alt"></i>
                             Profile
-                        </a>
+                        </Link>
 
                         <Link
                             onClick={this.active.bind(this, "logout")}

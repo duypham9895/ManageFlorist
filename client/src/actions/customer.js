@@ -1,27 +1,27 @@
 import axios from "axios";
 import {
-    GET_USERS,
-    GET_USER,
-    CHANGE_DATA_USER,
-    CREATE_USER_SUCCESS,
-    CREATE_USER_ERROR,
-    CREATE_USER_FAIL,
-    DELETE_USER,
-    REFRESH_USER
+    GET_CUSTOMERS,
+    GET_CUSTOMER,
+    CHANGE_DATA_CUSTOMER,
+    CREATE_CUSTOMER_SUCCESS,
+    CREATE_CUSTOMER_ERROR,
+    CREATE_CUSTOMER_FAIL,
+    DELETE_CUSTOMER,
+    REFRESH_CUSTOMER
 } from "./types";
 
-// Get Users
-export const getUsers = token => async dispatch => {
+// Get Customers
+export const getCustomers = token => async dispatch => {
     try {
         const config = {
             headers: {
                 "x-auth-token": token
             }
         };
-        const res = await axios.get("/api/users/member", config);
+        const res = await axios.get("/api/users/customer", config);
         // console.log(res.data);
         dispatch({
-            type: GET_USERS,
+            type: GET_CUSTOMERS,
             payload: res.data
         });
     } catch (error) {
@@ -29,8 +29,8 @@ export const getUsers = token => async dispatch => {
     }
 };
 
-// Get Users
-export const getUser = (token, id) => async dispatch => {
+// Get Customers
+export const getCustomer = (token, id) => async dispatch => {
     try {
         const config = {
             headers: {
@@ -40,7 +40,7 @@ export const getUser = (token, id) => async dispatch => {
         const res = await axios.get(`/api/users/${id}`, config);
         console.log(res.data);
         dispatch({
-            type: GET_USER,
+            type: GET_CUSTOMER,
             payload: res.data
         });
     } catch (error) {
@@ -48,22 +48,22 @@ export const getUser = (token, id) => async dispatch => {
     }
 };
 
-// Get data on form User
+// Get data on form Customer
 export const changeData = form => dispatch => {
     dispatch({
-        type: CHANGE_DATA_USER,
+        type: CHANGE_DATA_CUSTOMER,
         payload: form
     });
 };
 
-export const refreshUser = () => dispatch => {
+export const refreshCustomer = () => dispatch => {
     dispatch({
-        type: REFRESH_USER
+        type: REFRESH_CUSTOMER
     });
 };
 
-// Create new a User
-export const createUser = (
+// Create new a Customer
+export const createCustomer = (
     data,
     token,
     isCreate,
@@ -85,27 +85,27 @@ export const createUser = (
         }
 
         dispatch({
-            type: CREATE_USER_SUCCESS,
+            type: CREATE_CUSTOMER_SUCCESS,
             payload: res.data
         });
-        history.push("/dashboard/staff/data");
+        history.push("/dashboard/customer/data");
     } catch (err) {
         console.log(err);
         const error = err.response.data.errors;
         if (error) {
             dispatch({
-                type: CREATE_USER_ERROR,
+                type: CREATE_CUSTOMER_ERROR,
                 payload: error
             });
         }
         dispatch({
-            type: CREATE_USER_FAIL
+            type: CREATE_CUSTOMER_FAIL
         });
     }
 };
 
 // Delete users
-export const deleteUser = (id, token) => async dispatch => {
+export const deleteCustomer = (id, token) => async dispatch => {
     const config = {
         headers: {
             "x-auth-token": token
@@ -114,7 +114,7 @@ export const deleteUser = (id, token) => async dispatch => {
     try {
         await axios.delete(`/api/users/${id}`, config);
         dispatch({
-            type: DELETE_USER,
+            type: DELETE_CUSTOMER,
             payload: id
         });
     } catch (err) {
@@ -122,7 +122,7 @@ export const deleteUser = (id, token) => async dispatch => {
 
         if (error) {
             dispatch({
-                type: CREATE_USER_ERROR,
+                type: CREATE_CUSTOMER_ERROR,
                 payload: error
             });
         }

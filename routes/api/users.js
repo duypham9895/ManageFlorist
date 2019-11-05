@@ -123,32 +123,34 @@ router.put("/:id", auth, async (req, res) => {
     }
     let userMember = await Member.findOne({ account: user });
     let userCustomer = await Customer.findOne({ account: user });
-    // console.log(user);
+
     // Check ADMIN
     let account = await Account.findById(req.account.id);
     let member = await Member.findOne({ account });
-    let customer = await Customer.findOne({ account });
 
     let role;
-    if (code !== "") {
-        role = await Role.findOne({ code });
-        if (role.name !== userMember.role.name) {
-            if (role.qty <= 0) {
-                return res.status(400).json({
-                    errors: [
-                        {
-                            param: "code",
-                            msg: "Your Code is Expired"
-                        }
-                    ]
-                });
+    if (userMember) {
+        if (code !== "" || code !== undefined) {
+            role = await Role.findOne({ code });
+            if (role.name !== userMember.role.name) {
+                if (role.qty <= 0) {
+                    return res.status(400).json({
+                        errors: [
+                            {
+                                param: "code",
+                                msg: "Your Code is Expired"
+                            }
+                        ]
+                    });
+                }
+                userMember.role = role;
+                role.qty -= 1;
+                await role.save();
+            } else {
             }
-            userMember.role = role;
-            role.qty -= 1;
-            await role.save();
-        } else {
         }
     }
+
     if (member.role.name === "ADMIN") {
         user.isExists = isExists;
         user.name = name;
@@ -172,37 +174,9 @@ router.put("/:id", auth, async (req, res) => {
         }
         await user.save();
 
-        userMember.salary = salary;
-        userMember.target = target;
-        userMember.account = user;
-        await userMember.save();
-        return res.json(userMember);
-    }
-    if (member.role.name !== "ADMIN" || customer) {
-        user.name = name;
-        user.address = address;
-        user.birthday = birthday;
-
-        if (password !== confirmPassword) {
-            password = "";
-            confirmPassword = "";
-            return res.status(400).json({
-                errors: [
-                    {
-                        param: "confirmPassword",
-                        msg: "Password must match"
-                    }
-                ]
-            });
-        }
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(password, salt);
-
-        delete password;
-        delete confirmPassword;
-        await user.save();
-
         if (userMember) {
+            userMember.salary = salary;
+            userMember.target = target;
             userMember.account = user;
             await userMember.save();
             return res.json("Update success");
@@ -214,6 +188,43 @@ router.put("/:id", auth, async (req, res) => {
             return res.json("Update success");
         }
     }
+
+    // if (member.role.name !== "ADMIN" || customer) {
+    //     user.name = name;
+    //     user.address = address;
+    //     user.birthday = birthday;
+
+    //     if (password !== confirmPassword) {
+    //         password = "";
+    //         confirmPassword = "";
+    //         return res.status(400).json({
+    //             errors: [
+    //                 {
+    //                     param: "confirmPassword",
+    //                     msg: "Password must match"
+    //                 }
+    //             ]
+    //         });
+    //     }
+    //     const salt = await bcrypt.genSalt(10);
+    //     user.password = await bcrypt.hash(password, salt);
+
+    //     delete password;
+    //     delete confirmPassword;
+    //     await user.save();
+
+    //     if (userMember) {
+    //         userMember.account = user;
+    //         await userMember.save();
+    //         return res.json("Update success");
+    //     }
+
+    //     if (userCustomer) {
+    //         userCustomer.account = user;
+    //         await userCustomer.save();
+    //         return res.json("Update success");
+    //     }
+    // }
 });
 
 // @route   GET api/users/logout
@@ -295,6 +306,35 @@ router.get("/member", auth, async (req, res) => {
     }
 });
 
+// @route    GET api/users/customer
+// @desc     Get all customer
+// @access   Private
+router.get("/customer", auth, async (req, res) => {
+    let account = await Account.findById(req.account.id);
+    let member = await Member.findOne({ account });
+    // Check if account is not member
+    if (member.role.name !== "ADMIN") {
+        return res
+            .status(401)
+            .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
+    }
+
+    try {
+        const customers = await Customer.find()
+            .select("-password")
+            .sort({ date: -1 });
+
+        for (let i = 0; i < customers.length; i++) {
+            delete customers[i].account.password;
+        }
+
+        res.json(customers);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Server error");
+    }
+});
+
 // @route    GET api/users/:id
 // @desc     Get user
 // @access   Private
@@ -316,10 +356,10 @@ router.get("/:id", auth, async (req, res) => {
     }
 });
 
-// @route    DELETE api/users/member/:id
-// @desc     Delete a member
+// @route    DELETE api/users/:id
+// @desc     Delete a user
 // @access   Private
-router.delete("/member/:id", auth, async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
     try {
         let user = await Account.findById(req.params.id);
         if (!user) {
@@ -343,12 +383,20 @@ router.delete("/member/:id", auth, async (req, res) => {
                 .json({ errors: [{ msg: "Your Account is Unauthorized" }] });
         }
         member = await Member.findOne({ account: user });
+        let customer = await Customer.findOne({ account: user });
 
         user.isExists = false;
         await user.save();
 
-        member.account = user;
-        await member.save();
+        if (member) {
+            member.account = user;
+            await member.save();
+        }
+
+        if (customer) {
+            customer.account = user;
+            await customer.save();
+        }
 
         res.json({ msg: "Account removed" });
     } catch (err) {

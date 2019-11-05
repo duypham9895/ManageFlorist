@@ -55,11 +55,9 @@ exports.create = async function(account) {
         account.password = await bcrypt.hash(password, salt);
 
         delete password;
-
         await account.save();
-        console.log("role");
+
         let role = await Role.findOne({ code });
-        console.log("after search role");
         if (role) {
             if (role.qty <= 0) {
                 return res.status(400).json({
@@ -70,9 +68,7 @@ exports.create = async function(account) {
                     ]
                 });
             }
-            console.log("before member");
             let member = await Member.findOne({ account: account });
-            console.log("member = ", member);
             // check if account member's exists
             if (member) {
                 return res.status(400).json({

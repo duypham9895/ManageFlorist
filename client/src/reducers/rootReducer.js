@@ -8,6 +8,7 @@ import receipt from "./receipt";
 import discount from "./discount";
 import role from "./role";
 import user from "./user";
+import customer from "./customer";
 
 let reducers = combineReducers({
     auth,
@@ -18,7 +19,8 @@ let reducers = combineReducers({
     receipt,
     discount,
     role,
-    user
+    user,
+    customer
 });
 
 export default reducers;
