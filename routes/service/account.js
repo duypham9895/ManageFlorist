@@ -57,9 +57,9 @@ exports.create = async function(account) {
         delete password;
 
         await account.save();
-
+        console.log("role");
         let role = await Role.findOne({ code });
-
+        console.log("after search role");
         if (role) {
             if (role.qty <= 0) {
                 return res.status(400).json({
@@ -70,9 +70,9 @@ exports.create = async function(account) {
                     ]
                 });
             }
-
-            let member = await Member.findOne({ account: account.id });
-
+            console.log("before member");
+            let member = await Member.findOne({ account: account });
+            console.log("member = ", member);
             // check if account member's exists
             if (member) {
                 return res.status(400).json({
@@ -93,7 +93,7 @@ exports.create = async function(account) {
             await role.save();
             await member.save();
         } else {
-            let customer = await Customer.findOne({ account: account.id });
+            let customer = await Customer.findOne({ account: account });
             // check if account customer's exists
             if (customer) {
                 return res.status(400).json({

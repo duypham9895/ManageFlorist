@@ -13,7 +13,6 @@ import {
 class DataRole extends React.Component {
     componentDidMount() {
         this.props.dispatch(getRoles(this.props.auth.token));
-        console.log("role datra");
     }
     edit(data) {
         data.isCreate = false;

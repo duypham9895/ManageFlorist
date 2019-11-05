@@ -1,25 +1,26 @@
 import axios from "axios";
 import {
-    GET_ROLES,
-    CHANGE_DATA_ROLE,
-    CREATE_ROLE_SUCCESS,
-    CREATE_ROLE_ERROR,
-    CREATE_ROLE_FAIL,
-    DELETE_ROLE,
-    REFRESH_ROLE
+    GET_USERS,
+    CHANGE_DATA_USER,
+    CREATE_USER_SUCCESS,
+    CREATE_USER_ERROR,
+    CREATE_USER_FAIL,
+    DELETE_USER,
+    REFRESH_USER
 } from "./types";
 
-// Get Roles
-export const getRoles = token => async dispatch => {
+// Get Users
+export const getUsers = token => async dispatch => {
     try {
         const config = {
             headers: {
                 "x-auth-token": token
             }
         };
-        const res = await axios.get("/api/role", config);
+        const res = await axios.get("/api/users/member", config);
+        // console.log(res.data);
         dispatch({
-            type: GET_ROLES,
+            type: GET_USERS,
             payload: res.data
         });
     } catch (error) {
@@ -27,22 +28,27 @@ export const getRoles = token => async dispatch => {
     }
 };
 
-// Get data on form Role
+// Get data on form User
 export const changeData = form => dispatch => {
     dispatch({
-        type: CHANGE_DATA_ROLE,
+        type: CHANGE_DATA_USER,
         payload: form
     });
 };
 
-export const refreshRole = () => dispatch => {
+export const refreshUser = () => dispatch => {
     dispatch({
-        type: REFRESH_ROLE
+        type: REFRESH_USER
     });
 };
 
-// Create new a Role
-export const createRole = (data, token, history) => async dispatch => {
+// Create new a User
+export const createUser = (
+    data,
+    token,
+    isCreate,
+    history
+) => async dispatch => {
     const config = {
         headers: {
             "Content-Type": "application/json",
@@ -51,39 +57,44 @@ export const createRole = (data, token, history) => async dispatch => {
     };
     const body = JSON.stringify(data);
     try {
-        const res = await axios.post("/api/role", body, config);
-        dispatch({
-            type: CREATE_ROLE_SUCCESS,
-            payload: res.data
-        });
-        history.push("/dashboard/role/data");
-    } catch (err) {
-        const error = err.response.data.errors;
-
-        if (error) {
-            dispatch({
-                type: CREATE_ROLE_ERROR,
-                payload: error
-            });
+        let res = {};
+        if (isCreate) {
+            res = await axios.post("/api/users", body, config);
+        } else {
+            res = await axios.put(`/api/users/${data._id}`, body, config);
         }
 
         dispatch({
-            type: CREATE_ROLE_FAIL
+            type: CREATE_USER_SUCCESS,
+            payload: res.data
+        });
+        history.push("/dashboard/staff/data");
+    } catch (err) {
+        console.log(err);
+        const error = err.response.data.errors;
+        if (error) {
+            dispatch({
+                type: CREATE_USER_ERROR,
+                payload: error
+            });
+        }
+        dispatch({
+            type: CREATE_USER_FAIL
         });
     }
 };
 
-// Delete role
-export const deleteRole = (id, token) => async dispatch => {
+// Delete users
+export const deleteUser = (id, token) => async dispatch => {
     const config = {
         headers: {
             "x-auth-token": token
         }
     };
     try {
-        await axios.delete(`/api/role/${id}`, config);
+        await axios.delete(`/api/users/member/${id}`, config);
         dispatch({
-            type: DELETE_ROLE,
+            type: DELETE_USER,
             payload: id
         });
     } catch (err) {
@@ -91,7 +102,7 @@ export const deleteRole = (id, token) => async dispatch => {
 
         if (error) {
             dispatch({
-                type: CREATE_ROLE_ERROR,
+                type: CREATE_USER_ERROR,
                 payload: error
             });
         }

@@ -130,7 +130,7 @@ class Sidebar extends React.Component {
                         </Link>
                         <Link
                             onClick={this.active.bind(this, "staff")}
-                            to="/dashboard/staff"
+                            to="/dashboard/staff/data"
                             className={active.staff}
                         >
                             <i className="fas fa-users"></i>Staff

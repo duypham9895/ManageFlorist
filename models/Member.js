@@ -10,6 +10,9 @@ let MemberSchema = new Schema({
     salary: {
         type: Number
     },
+    target: {
+        type: Number
+    },
     role: Schema.Types.Mixed
     // role: {
     //     type: Schema.Types.Mixed,

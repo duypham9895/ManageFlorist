@@ -20,7 +20,6 @@ class FormProduct extends React.Component {
         };
         if (e.target.name === "image") {
             data.image = e.target.files[0];
-            console.log(data.image);
         }
         // console.log("-=-=-=-=-");
         // let temp = image.split("/");
