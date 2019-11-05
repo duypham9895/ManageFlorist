@@ -18,7 +18,8 @@ class Sidebar extends React.Component {
                 inventory: "",
                 staff: "",
                 discount: "",
-                role: ""
+                role: "",
+                profile: ""
             }
         };
     }
@@ -27,6 +28,10 @@ class Sidebar extends React.Component {
             return this.props.dispatch(
                 logout(this.props.auth.token, this.props.history)
             );
+        }
+
+        if (value === "profile") {
+            console.log("profile asdasdasd");
         }
         let temp;
         let active = { ...this.state.active };
@@ -144,6 +149,14 @@ class Sidebar extends React.Component {
                             <i className="fas fa-user-shield"></i>
                             Role
                         </Link>
+
+                        <a
+                            onClick={this.active.bind(this, "profile")}
+                            className={active.profile}
+                        >
+                            <i className="fas fa-user-alt"></i>
+                            Profile
+                        </a>
 
                         <Link
                             onClick={this.active.bind(this, "logout")}

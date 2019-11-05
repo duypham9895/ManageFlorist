@@ -132,7 +132,6 @@ router.put("/:id", auth, async (req, res) => {
     let role;
     if (code !== "") {
         role = await Role.findOne({ code });
-
         if (role.name !== userMember.role.name) {
             if (role.qty <= 0) {
                 return res.status(400).json({
@@ -224,10 +223,11 @@ router.get("/logout", auth, async (req, res) => {
     try {
         let account = await Account.findById(req.account.id);
         if (account) {
-            account.token = "";
-
             let customer = await Customer.findOne({ account });
             let member = await Member.findOne({ account });
+
+            account.token = "";
+            await account.save();
 
             if (customer) {
                 customer.account = account;
@@ -241,6 +241,7 @@ router.get("/logout", auth, async (req, res) => {
 
             if (member) {
                 member.account = account;
+                console.log(member);
                 let invoice = await Invoice.findOne({ member });
                 if (invoice) {
                     invoice.member = member;
@@ -249,7 +250,6 @@ router.get("/logout", auth, async (req, res) => {
                 await member.save();
             }
 
-            await account.save();
             return res.sendStatus(200);
         }
 
@@ -289,6 +289,27 @@ router.get("/member", auth, async (req, res) => {
         }
 
         res.json(users);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Server error");
+    }
+});
+
+// @route    GET api/users/:id
+// @desc     Get user
+// @access   Private
+router.get("/:id", auth, async (req, res) => {
+    let account = await Account.findById(req.params.id);
+    if (!account) {
+        return res.status(404).json({ msg: "Account not found" });
+    }
+    // Check if account is not member
+
+    try {
+        const user = await Member.findOne({ account });
+        delete user.account.password;
+
+        res.json(user);
     } catch (error) {
         console.error(error);
         res.status(500).send("Server error");

@@ -14,13 +14,6 @@ class FormStaff extends React.Component {
             ...this.props.us.user,
             [e.target.name]: e.target.value
         };
-        // console.log(data);
-
-        // for (let temp in data.account) {
-        //     data.temp = data.account[temp];
-        // }
-
-        // console.log(data);
         this.props.dispatch(changeData(data));
     }
     submit() {

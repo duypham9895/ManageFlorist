@@ -15,6 +15,7 @@ import Inventory from "../components/inventory/Inventory.jsx";
 import Staff from "../components/staff/Staff.jsx";
 import Discount from "../components/discount/Discount.jsx";
 import Role from "../components/role/Role.jsx";
+import Profile from "../components/profile/Profile.jsx";
 
 class Dashboard extends React.Component {
     render() {
@@ -57,6 +58,10 @@ class Dashboard extends React.Component {
                                 component={Discount}
                             />
                             <Route path="/dashboard/role" component={Role} />
+                            <Route
+                                path="/dashboard/profile"
+                                component={Profile}
+                            />
                         </Switch>
                     </Fragment>
                 )}
