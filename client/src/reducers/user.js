@@ -14,7 +14,17 @@ const initialState = {
     user: {},
     loading: true,
     error: {
-        name: ""
+        name: "",
+        phone: "",
+        email: "",
+        address: "",
+        password: "",
+        confirmPassword: "",
+        salary: "",
+        target: "",
+        point: "",
+        level: "",
+        code: ""
     }
 };
 

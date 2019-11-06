@@ -160,7 +160,7 @@ class Sidebar extends React.Component {
                         <Link
                             onClick={this.active.bind(this, "profile")}
                             className={active.profile + " pointer"}
-                            to="/dashboard/staff/form"
+                            to="/dashboard/profile/form"
                         >
                             <i className="fas fa-user-alt"></i>
                             Profile

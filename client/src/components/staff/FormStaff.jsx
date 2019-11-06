@@ -244,7 +244,7 @@ class FormStaff extends React.Component {
                                                                         <input
                                                                             className="s-c bottom"
                                                                             type="radio"
-                                                                            name="category"
+                                                                            name="code"
                                                                             value={
                                                                                 role.code
                                                                             }
@@ -456,7 +456,7 @@ class FormStaff extends React.Component {
                                                                                 <input
                                                                                     className="s-c bottom"
                                                                                     type="radio"
-                                                                                    name="category"
+                                                                                    name="code"
                                                                                     value={
                                                                                         role.code
                                                                                     }

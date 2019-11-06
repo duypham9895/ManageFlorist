@@ -13,7 +13,15 @@ const initialState = {
     product: {},
     loading: true,
     error: {
-        name: ""
+        name: "",
+        qty: "",
+        importPrice: "",
+        sellingPrice: "",
+        expired: "",
+        image: "",
+        category: "",
+        description: "",
+        supplier: ""
     }
 };
 

@@ -14,7 +14,13 @@ const initialState = {
     customer: {},
     loading: true,
     error: {
-        name: ""
+        name: "",
+        address: "",
+        avatar: "",
+        email: "",
+        level: "",
+        phone: "",
+        point: ""
     }
 };
 

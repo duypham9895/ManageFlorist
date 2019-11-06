@@ -13,7 +13,11 @@ const initialState = {
     discount: {},
     loading: true,
     error: {
-        name: ""
+        code: "",
+        endDate: "",
+        startDate: "",
+        event: "",
+        percent: ""
     }
 };
 

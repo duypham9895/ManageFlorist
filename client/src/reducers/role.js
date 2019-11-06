@@ -13,7 +13,9 @@ const initialState = {
     role: {},
     loading: true,
     error: {
-        name: ""
+        name: "",
+        code: "",
+        qty: ""
     }
 };
 

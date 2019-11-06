@@ -252,7 +252,6 @@ router.get("/logout", auth, async (req, res) => {
 
             if (member) {
                 member.account = account;
-                console.log(member);
                 let invoice = await Invoice.findOne({ member });
                 if (invoice) {
                     invoice.member = member;
