@@ -22,7 +22,8 @@ class Sidebar extends React.Component {
                 role: "",
                 profile: "",
                 invoice: ""
-            }
+            },
+            count: false
         };
     }
 
@@ -59,7 +60,14 @@ class Sidebar extends React.Component {
         });
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        await this.props.dispatch(
+            getUser(this.props.auth.token, this.props.auth.id)
+        );
+        await this.sleep(3000);
+        // let count = 0;
+        // if(cou)
+        // await this.refreshPage();
         let str = this.props.location.pathname.split("/");
         let target = str[str.indexOf("dashboard") + 1];
 
@@ -78,8 +86,28 @@ class Sidebar extends React.Component {
             }
         });
     }
+
+    refreshPage() {
+        let count = this.state.count;
+        if (!count) {
+            window.location.reload();
+        } else {
+        }
+        this.setState({
+            ...this.state,
+            count: true
+        });
+        // setInterval(function() {
+        //     window.location.reload();
+        // }, 3000);
+        // setTimeout(function() {
+        //     window.location.reload();
+        // }, 3000);
+    }
     render() {
         const active = this.state.active;
+        const user = this.props.user.user;
+
         return (
             <Fragment>
                 <section id="sideMenu">
@@ -115,33 +143,13 @@ class Sidebar extends React.Component {
                         >
                             <i className="fas fa-user-tie"></i>Customer
                         </Link>
-                        <Link
-                            onClick={this.active.bind(this, "discount")}
-                            to="/dashboard/discount/data"
-                            className={active.discount}
-                        >
-                            <i className="fas fa-percent"></i>Discount
-                        </Link>
+
                         <Link
                             onClick={this.active.bind(this, "product")}
                             to="/dashboard/product/data"
                             className={active.product}
                         >
                             <i className="fas fa-shopping-cart"></i>Product
-                        </Link>
-                        <Link
-                            onClick={this.active.bind(this, "category")}
-                            to="/dashboard/category/data"
-                            className={active.category}
-                        >
-                            <i className="fas fa-clipboard-list"></i>Category
-                        </Link>
-                        <Link
-                            onClick={this.active.bind(this, "supplier")}
-                            to="/dashboard/supplier/data"
-                            className={active.supplier}
-                        >
-                            <i className="fas fa-address-book"></i>Supplier
                         </Link>
 
                         <Link
@@ -150,22 +158,6 @@ class Sidebar extends React.Component {
                             className={active.inventory}
                         >
                             <i className="fas fa-warehouse"></i>Inventory
-                        </Link>
-                        <Link
-                            onClick={this.active.bind(this, "staff")}
-                            to="/dashboard/staff/data"
-                            className={active.staff}
-                        >
-                            <i className="fas fa-users"></i>Staff
-                        </Link>
-
-                        <Link
-                            onClick={this.active.bind(this, "role")}
-                            to="/dashboard/role/data"
-                            className={active.role}
-                        >
-                            <i className="fas fa-user-shield"></i>
-                            Role
                         </Link>
 
                         <Link
@@ -176,6 +168,53 @@ class Sidebar extends React.Component {
                             <i className="fas fa-user-alt"></i>
                             Profile
                         </Link>
+
+                        {user.role === undefined ||
+                        user.role.name !== "ADMIN" ? (
+                            ""
+                        ) : (
+                            <Fragment>
+                                <Link
+                                    onClick={this.active.bind(this, "discount")}
+                                    to="/dashboard/discount/data"
+                                    className={active.discount}
+                                >
+                                    <i className="fas fa-percent"></i>Discount
+                                </Link>
+                                <Link
+                                    onClick={this.active.bind(this, "category")}
+                                    to="/dashboard/category/data"
+                                    className={active.category}
+                                >
+                                    <i className="fas fa-clipboard-list"></i>
+                                    Category
+                                </Link>
+                                <Link
+                                    onClick={this.active.bind(this, "supplier")}
+                                    to="/dashboard/supplier/data"
+                                    className={active.supplier}
+                                >
+                                    <i className="fas fa-address-book"></i>
+                                    Supplier
+                                </Link>
+                                <Link
+                                    onClick={this.active.bind(this, "staff")}
+                                    to="/dashboard/staff/data"
+                                    className={active.staff}
+                                >
+                                    <i className="fas fa-users"></i>Staff
+                                </Link>
+
+                                <Link
+                                    onClick={this.active.bind(this, "role")}
+                                    to="/dashboard/role/data"
+                                    className={active.role}
+                                >
+                                    <i className="fas fa-user-shield"></i>
+                                    Role
+                                </Link>
+                            </Fragment>
+                        )}
 
                         <Link
                             onClick={this.active.bind(this, "logout")}
@@ -192,7 +231,8 @@ class Sidebar extends React.Component {
 
 const mapStateToProps = store => {
     return {
-        auth: store.auth
+        auth: store.auth,
+        user: store.user
     };
 };
 

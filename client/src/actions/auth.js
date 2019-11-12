@@ -69,13 +69,17 @@ export const login = (username, password) => async dispatch => {
 
     const body = JSON.stringify({ username, password });
     try {
-        const res = await axios.post("/api/auth", body, config);
+        let res = await axios.post("/api/auth", body, config);
         // console.log(res.data);
         setCookie("florist", res.data, 1);
+        // console.log("2222-------");
         dispatch({
             type: LOGIN_SUCCESS,
             payload: res.data
         });
+        // console.log("1111------");
+        // res = await axios.get(`/api/users/${res.data.id}`, config);
+        console.log(res.data);
         // dispatch(loadUser());
     } catch (err) {
         const error = err.response.data.errors;

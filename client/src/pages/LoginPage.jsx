@@ -101,6 +101,7 @@ class LoginPage extends React.Component {
 
 const mapStateToProps = store => {
     return {
+        auth: store.auth,
         isAuthenticated: store.auth.isAuthenticated,
         errors: store.auth.msg.login
     };
