@@ -450,7 +450,9 @@ table {
 }
 #content-area .cards .card .schools .fa-eye,
 #content-area .cards .card .schools .fa-edit,
-#content-area .cards .card .schools .fa-trash-alt {
+#content-area .cards .card .schools .fa-trash-alt,
+#content-area .cards .card .schools .fa-info-circle,
+#content-area .cards .card .schools .fa-cart-plus {
     font-size: 1.3rem;
     color: #6c7882;
     padding-right: 10px;
@@ -587,7 +589,8 @@ table tbody td .circle.uncheck {
 }
 table tbody td .fa-eye,
 table tbody td .fa-edit,
-table tbody td .fa-trash-alt {
+table tbody td .fa-trash-alt,
+table tbody td .fa-info-circle {
     font-size: 1.3rem;
     color: #6c7882;
     padding: 0 10px;

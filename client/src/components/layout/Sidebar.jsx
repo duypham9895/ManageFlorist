@@ -20,7 +20,8 @@ class Sidebar extends React.Component {
                 staff: "",
                 discount: "",
                 role: "",
-                profile: ""
+                profile: "",
+                invoice: ""
             }
         };
     }
@@ -97,6 +98,16 @@ class Sidebar extends React.Component {
                         >
                             <i className="fas fa-list"></i>Orders
                         </Link>
+
+                        <Link
+                            onClick={this.active.bind(this, "invoice")}
+                            to="/dashboard/invoice/data"
+                            className={active.invoice}
+                        >
+                            <i className="fas fa-file-invoice-dollar"></i>
+                            Invoice
+                        </Link>
+
                         <Link
                             onClick={this.active.bind(this, "customer")}
                             to="/dashboard/customer/data"

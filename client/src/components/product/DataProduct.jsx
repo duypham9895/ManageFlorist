@@ -10,6 +10,8 @@ import {
     refreshProduct
 } from "../../actions/product";
 
+import { addToCart } from "../../actions/order";
+
 import { getInventories } from "../../actions/inventory";
 
 class DataProduct extends React.Component {
@@ -37,6 +39,16 @@ class DataProduct extends React.Component {
 
     refresh() {
         this.props.dispatch(refreshProduct());
+    }
+
+    add(product) {
+        let cart = {
+            invoice: "",
+            product: product,
+            qty: 1
+        };
+
+        this.props.dispatch(addToCart(cart));
     }
     render() {
         const products = this.props.prod.products;
@@ -112,6 +124,16 @@ class DataProduct extends React.Component {
                                                     ).format("MMM Do YYYY")}
                                                 </p>
                                                 <div className="schools">
+                                                    <span
+                                                        className="pointer"
+                                                        onClick={this.add.bind(
+                                                            this,
+                                                            prd
+                                                        )}
+                                                    >
+                                                        <i className="fas fa-cart-plus"></i>
+                                                    </span>
+
                                                     <Link
                                                         to="/dashboard/product/form"
                                                         onClick={this.edit.bind(
@@ -150,7 +172,8 @@ const mapStateToProps = store => {
     return {
         auth: store.auth,
         prod: store.product,
-        inventory: store.inventory
+        inventory: store.inventory,
+        order: store.order
     };
 };
 

@@ -13,6 +13,10 @@ let MemberSchema = new Schema({
     target: {
         type: Number
     },
+    sold: {
+        type: Number,
+        default: 0
+    },
     role: Schema.Types.Mixed
     // role: {
     //     type: Schema.Types.Mixed,

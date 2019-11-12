@@ -163,7 +163,7 @@ router.post(
                 inventory.product = product;
                 inventory.receiptDate = new Date();
                 inventory.expirationDate = expirationDate;
-                inventory.qty = qty;
+                inventory.qty += qty;
                 inventory.isDamage = isDamage;
 
                 await inventory.save();

@@ -9,6 +9,8 @@ import discount from "./discount";
 import role from "./role";
 import user from "./user";
 import customer from "./customer";
+import invoice from "./invoice";
+import order from "./order";
 
 let reducers = combineReducers({
     auth,
@@ -20,7 +22,9 @@ let reducers = combineReducers({
     discount,
     role,
     user,
-    customer
+    customer,
+    invoice,
+    order
 });
 
 export default reducers;

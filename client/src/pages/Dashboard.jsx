@@ -7,6 +7,7 @@ import Sidebar from "../components/layout/Sidebar.jsx";
 
 import Home from "../components/dashboard/Home.jsx";
 import Category from "../components/category/Category.jsx";
+import Invoice from "../components/invoice/Invoice.jsx";
 import Orders from "../components/orders/Orders.jsx";
 import Customer from "../components/customer/Customer.jsx";
 import Product from "../components/product/Product.jsx";
@@ -31,7 +32,14 @@ class Dashboard extends React.Component {
                         <Sidebar {...this.props.history} />
                         <Switch>
                             <Route path="/dashboard/home" component={Home} />
-                            <Route path="/dashboard/order" component={Orders} />
+                            <Route
+                                path="/dashboard/orders"
+                                component={Orders}
+                            />
+                            <Route
+                                path="/dashboard/invoice"
+                                component={Invoice}
+                            />
                             <Route
                                 path="/dashboard/customer"
                                 component={Customer}

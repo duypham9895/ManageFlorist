@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Moment from "moment";
+import Spinner from "../layout/Sidebar";
 
 import {
     getSuppliers,
@@ -29,6 +30,9 @@ class DataSupplier extends React.Component {
     }
     render() {
         const suppliers = this.props.supplier.suppliers;
+        if (this.props.supplier.loading && suppliers == null) {
+            return <Spinner />;
+        }
         return (
             <Fragment>
                 <section id="content-area">

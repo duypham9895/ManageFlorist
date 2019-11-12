@@ -30,8 +30,6 @@ class DataInventory extends React.Component {
     render() {
         const receipts = this.props.receipt.receipts;
         const stocks = this.props.inventory.stocks;
-
-        console.log(receipts);
         return (
             <Fragment>
                 <section id="content-area">

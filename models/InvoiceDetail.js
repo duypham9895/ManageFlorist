@@ -18,10 +18,6 @@ let InvoiceDetailSchema = new Schema({
         type: Number,
         required: true
     },
-    total: {
-        type: Number,
-        required: true
-    },
     dateCreate: {
         type: Date,
         default: Date.now

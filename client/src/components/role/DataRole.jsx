@@ -28,7 +28,6 @@ class DataRole extends React.Component {
     }
     render() {
         const roles = this.props.role.roles;
-        console.log(roles);
         return (
             <Fragment>
                 <section id="content-area">

@@ -1,9 +1,16 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
+import Spinner from "../layout/Sidebar";
 
 class Home extends React.Component {
     render() {
-        return (
+        const auth = this.props.auth;
+
+        // return <Spinner />;
+
+        return auth.loading && auth.token === null ? (
+            <Spinner />
+        ) : (
             <Fragment>
                 <section id="content-area">
                     <div className="col-md-12">

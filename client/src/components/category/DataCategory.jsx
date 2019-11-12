@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Moment from "moment";
+import Spinner from "../layout/Sidebar";
 
 import {
     getCategories,
@@ -28,7 +29,14 @@ class DataCategory extends React.Component {
     }
     render() {
         const categories = this.props.category.categories;
-        return (
+        // if (this.props.category.loading && categories == null) {
+        //     return <Spinner />;
+        // }
+        return this.props.category.loading && categories == null ? (
+            <Fragment>
+                <Spinner />
+            </Fragment>
+        ) : (
             <Fragment>
                 <section id="content-area">
                     <div className="col-md-12">

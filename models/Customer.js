@@ -12,7 +12,7 @@ let CustomerSchema = new Schema({
     },
     level: {
         type: String,
-        default: "BRONZE"
+        default: "NEW"
     }
 });
 module.exports = Customer = mongoose.model("customer", CustomerSchema);
