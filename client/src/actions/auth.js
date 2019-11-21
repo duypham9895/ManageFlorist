@@ -71,15 +71,20 @@ export const login = (username, password) => async dispatch => {
     try {
         let res = await axios.post("/api/auth", body, config);
         // console.log(res.data);
-        setCookie("florist", res.data, 1);
+        let data = {
+            token: res.data.token,
+            role: res.data.role,
+            id: res.data.id
+        }   
+        setCookie("florist", data.token, 1);
         // console.log("2222-------");
         dispatch({
             type: LOGIN_SUCCESS,
-            payload: res.data
+            payload: data
         });
         // console.log("1111------");
         // res = await axios.get(`/api/users/${res.data.id}`, config);
-        console.log(res.data);
+        // console.log(res.data);
         // dispatch(loadUser());
     } catch (err) {
         const error = err.response.data.errors;
@@ -112,7 +117,8 @@ export const checkSession = history => async dispatch => {
                 type: LOGIN_SUCCESS,
                 payload: {
                     token: token,
-                    id: res.data
+                    id: res.data.id,
+                    role: res.data.role
                 }
             });
         }
@@ -143,7 +149,7 @@ export const logout = (token, history) => async dispatch => {
         } else {
             dispatch({
                 type: LOGIN_ERROR,
-                payload: res.data
+                payload: res.data.id
             });
         }
     } catch (err) {

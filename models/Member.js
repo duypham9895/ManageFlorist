@@ -2,11 +2,11 @@ let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
 let MemberSchema = new Schema({
-    account: Schema.Types.Mixed,
-    // account: {
-    //     type: Schema.Types.Mixed,
-    //     ref: "account"
-    // },
+    // account: Schema.Types.Mixed,
+    account: {
+        type: Schema.Types.Mixed,
+        ref: "account"
+    },
     salary: {
         type: Number
     },
@@ -17,11 +17,11 @@ let MemberSchema = new Schema({
         type: Number,
         default: 0
     },
-    role: Schema.Types.Mixed
-    // role: {
-    //     type: Schema.Types.Mixed,
-    //     ref: "role"
-    // }
+    // role: Schema.Types.Mixed
+    role: {
+        type: Schema.Types.Mixed,
+        ref: "role"
+    }
 });
 
 module.exports = Member = mongoose.model("member", MemberSchema);

@@ -5,6 +5,7 @@ const config = require("config");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { check, validationResult } = require("express-validator");
+const mongoose = require("mongoose");
 
 const Account = require("../../models/Account");
 const Member = require("../../models/Member");
@@ -78,13 +79,14 @@ router.post(
                 }
             };
 
+            // let role = member.role.name;
+
             jwt.sign(
                 payload,
                 config.get("jwtSecret"),
                 { expiresIn: 360000 },
                 async (err, token) => {
                     if (err) throw err;
-
                     account.token = token;
 
                     if (member) {
@@ -97,10 +99,19 @@ router.post(
                     }
 
                     await account.save();
-                    // console.log("post api auth");
-                    return res.status(200).json(token);
+
+                    let temp = {
+                        token: token,
+                        role: member.role.name,
+                        id: account.id
+                    }
+
+                    return res.status(200).json(temp);
                 }
             );
+            // console.log("token = ", account.token)   
+            // return res.status(200).send(token);
+            
         } catch (error) {
             console.error(error);
             res.status(500).send("Server error");
@@ -118,17 +129,18 @@ router.put("/", async (req, res) => {
 
     jwt.verify(req.body.token, config.get("jwtSecret"), async (err, token) => {
         if (!err) {
-            let id = token.account.id;
-            let account = await Account.findOne({ _id: id });
+            let acc = await Account.findById({ _id:  mongoose.Types.ObjectId(token.account.id) });
+            let member = await Member.findOne({account: acc});
 
-            if (!account) {
+            if (!acc) {
                 return res.sendStatus(400);
             }
 
-            if (req.body.token !== account.token) {
+            if (req.body.token !== acc.token) {
                 return res.sendStatus(400);
             }
-            return res.status(200).send(id);
+            
+            return res.status(200).send({id: token.account.id, role: member.role.name});
         } else {
             return res.sendStatus(400);
         }

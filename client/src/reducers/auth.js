@@ -5,6 +5,7 @@ import {
     USER_LOADED,
     AUTH_ERROR,
     LOGIN_SUCCESS,
+    LOGIN_ID,
     LOGIN_FAIL,
     LOGIN_ERROR,
     LOGOUT,
@@ -15,6 +16,7 @@ const initialState = {
     token: null,
     isAuthenticated: null,
     id: null,
+    role: null,
     loading: true,
     user: null,
     msg: {
@@ -60,14 +62,23 @@ export default function(state = initialState, action) {
             let loginSuccess = { ...state.msg.login };
             loginSuccess.password = "";
             loginSuccess.username = "";
+            // console.log(payload);
             return {
                 ...state,
                 token: payload.token,
                 id: payload.id,
+                role: payload.role,
                 isAuthenticated: true,
                 loading: false,
                 msg: { ...state.msg, login: loginSuccess }
             };
+        case LOGIN_ID:{
+            return {
+                ...state,
+                token: payload.token,
+                id: payload.id,
+            };
+        }
 
         case LOGIN_ERROR:
             let login = { ...state.msg.login };

@@ -64,10 +64,6 @@ class Sidebar extends React.Component {
         await this.props.dispatch(
             getUser(this.props.auth.token, this.props.auth.id)
         );
-        await this.sleep(3000);
-        // let count = 0;
-        // if(cou)
-        // await this.refreshPage();
         let str = this.props.location.pathname.split("/");
         let target = str[str.indexOf("dashboard") + 1];
 
@@ -97,16 +93,10 @@ class Sidebar extends React.Component {
             ...this.state,
             count: true
         });
-        // setInterval(function() {
-        //     window.location.reload();
-        // }, 3000);
-        // setTimeout(function() {
-        //     window.location.reload();
-        // }, 3000);
     }
     render() {
         const active = this.state.active;
-        const user = this.props.user.user;
+        const role = this.props.auth.role;
 
         return (
             <Fragment>
@@ -169,8 +159,7 @@ class Sidebar extends React.Component {
                             Profile
                         </Link>
 
-                        {user.role === undefined ||
-                        user.role.name !== "ADMIN" ? (
+                        {role !== "ADMIN" ? (
                             ""
                         ) : (
                             <Fragment>
