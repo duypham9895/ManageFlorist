@@ -1,4 +1,10 @@
-import { CHANGE_DATA_CART, CHANGE_DATA } from "../actions/types";
+import { 
+    CHANGE_DATA_CART, 
+    CHANGE_DATA, 
+    CHANGE_DATA_CARTS, 
+    DELETE_ORDER 
+} from "../actions/types";
+
 const initialState = {
     carts: [],
     isCreate: false,
@@ -31,11 +37,27 @@ export default function(state = initialState, action) {
             };
         }
 
+        case CHANGE_DATA_CARTS: {
+            return {
+                ...state,
+                carts: payload
+            };
+        }
+
         case CHANGE_DATA: {
             return {
                 ...state,
                 cart: payload
             };
+        }
+
+        case DELETE_ORDER: {
+            return{
+                ...state,
+                carts: state.carts.filter(
+                    cart => cart !== payload
+                ),
+            }
         }
 
         default: {

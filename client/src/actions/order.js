@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CHANGE_DATA_CART, CHANGE_DATA } from "../actions/types";
+import { CHANGE_DATA_CART, CHANGE_DATA, CHANGE_DATA_CARTS, DELETE_ORDER } from "../actions/types";
 
 // add data to Carts
 export const addToCart = form => dispatch => {
@@ -13,6 +13,20 @@ export const changeData = form => dispatch => {
     dispatch({
         type: CHANGE_DATA,
         payload: form
+    });
+};
+
+export const changeDataCarts = form => dispatch => {
+    dispatch({
+        type: CHANGE_DATA_CARTS,
+        payload: form
+    });
+};
+
+export const deleteOrder = cart => dispatch => {
+    dispatch({
+        type: DELETE_ORDER,
+        payload: cart
     });
 };
 

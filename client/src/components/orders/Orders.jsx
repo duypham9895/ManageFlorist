@@ -1,7 +1,13 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
 
-import { changeData, createInvoice } from "../../actions/order";
+import { 
+    changeData, 
+    createInvoice, 
+    changeDataCarts, 
+    deleteOrder 
+} from "../../actions/order";
+
 import { getDiscounts } from "../../actions/discount";
 class Orders extends React.Component {
     componentDidMount() {
@@ -13,6 +19,33 @@ class Orders extends React.Component {
             [e.target.name]: e.target.value
         };
         this.props.dispatch(changeData(data));
+    }
+
+    changeQty(e, cart){
+        let value = e.target.value;
+        
+        if( value === 0 || value === ""){
+            return;
+        }
+        for (let i = 0 ; i < value.length; i++){
+            if(parseInt(value[0]) === 0){
+                return;
+            }
+        }
+
+        let carts = [...this.props.order.carts]
+        let temp;
+        for (temp of carts){
+            if (temp === cart){
+                cart.qty = value
+            }
+        }
+
+        this.props.dispatch(changeDataCarts(carts));
+    }
+
+    delete(cart){
+        this.props.dispatch(deleteOrder(cart));
     }
 
     submit() {
@@ -112,6 +145,7 @@ class Orders extends React.Component {
                                         <th>EXPIRED DAYS</th>
                                         <th>QTY</th>
                                         <th>UNIT PRICE</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 {orders.length === 0 ? (
@@ -145,12 +179,32 @@ class Orders extends React.Component {
                                                     <td>
                                                         {order.product.expired}
                                                     </td>
-                                                    <td>{order.qty}</td>
+                                                    <td>
+                                                        <input
+                                                            className=""
+                                                            type="number"
+                                                            min="1"
+                                                            name="qty"
+                                                            onChange={(e) => this.changeQty(e, order)}
+                                                            value={ order.qty}
+                                                        />
+                                                    </td>
                                                     <td>
                                                         {
                                                             order.product
                                                                 .sellingPrice
                                                         }
+                                                    </td>
+                                                    <td>
+                                                        <span
+                                                            className="pointer"
+                                                            onClick={this.delete.bind(
+                                                                this,
+                                                                order
+                                                            )}
+                                                        >
+                                                            <i className="fas fa-trash-alt"></i>
+                                                        </span>
                                                     </td>
                                                 </tr>
                                             );
