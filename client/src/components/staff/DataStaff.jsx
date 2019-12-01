@@ -68,6 +68,7 @@ class DataStaff extends React.Component {
                                         <th>PHONE</th>
                                         <th>SALARY</th>
                                         <th>TARGET</th>
+                                        <th>SOLD</th>
                                         <th>ROLE</th>
                                         <th>DATE</th>
                                         <th>STATUS</th>
@@ -93,6 +94,7 @@ class DataStaff extends React.Component {
                                                 <td>{user.account.phone}</td>
                                                 <td>{user.salary}</td>
                                                 <td>{user.target}</td>
+                                                <td>{user.sold}</td>
                                                 <td>{user.role.name}</td>
                                                 <td>
                                                     {Moment(

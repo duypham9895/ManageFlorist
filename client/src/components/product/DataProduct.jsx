@@ -2,6 +2,9 @@ import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Moment from "moment";
+import ReactNotification from 'react-notifications-component';
+import { store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
 
 import {
     getProducts,
@@ -47,8 +50,21 @@ class DataProduct extends React.Component {
             product: product,
             qty: 1
         };
-
         this.props.dispatch(addToCart(cart));
+
+        store.addNotification({
+            title: "",
+            message: "Successful add product to cart",
+            type: "success",
+            insert: "top",
+            container: "top-right",
+            animationIn: ["animated", "fadeIn"],
+            animationOut: ["animated", "fadeOut"],
+            dismiss: {
+              duration: 1500,
+              onScreen: true
+            }
+          });
     }
     render() {
         const products = this.props.prod.products;
@@ -59,6 +75,7 @@ class DataProduct extends React.Component {
                 <section id="content-area">
                     <div className="col-md-12">
                         <div className="row">
+                            <ReactNotification />
                             <Link
                                 to="/dashboard/product/form"
                                 className="btn btn-green"

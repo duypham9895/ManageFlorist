@@ -14,6 +14,7 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
         <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.debug.js"></script>
         <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -43,5 +44,60 @@
 
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
-    --></body>
+    -->
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+    <script>
+        function handleSidebar() {
+            // To make current link active
+          var pageURL = $(location).attr('href');
+          var URLSplits = pageURL.split('/');
+  
+          if (URLSplits.length === 4) {
+            var routeURL = '/' + URLSplits[URLSplits.length - 1] ;
+            var activeNestedList = $('.sub-menu  > .list-group-item > a[href="' + routeURL + '"]').parent();
+            if (activeNestedList.length !== 0 && !activeNestedList.hasClass('active')) {
+              $('.sub-menu > .list-group-item').removeClass('active');  
+              activeNestedList.parent().addClass("show");
+            }
+          }
+          
+          function toggleSidebar() {
+            if(jQuery(window).innerWidth() <= 992) {
+                jQuery("#sidebar").addClass("invisible");    
+              } else {
+                jQuery("#sidebar").removeClass("invisible");
+              }
+          }
+          toggleSidebar();         
+          jQuery(window).on("resize",function(){
+              toggleSidebar();
+          });
+          jQuery(".toggle-sidebar").on("click",function(){
+            jQuery("#sidebar").toggleClass("invisible");
+          });
+          jQuery("#sidebar a").on("click",function(){
+            jQuery("#sidebar .sub-menu").removeClass("show");
+            jQuery(this).parent().parent().addClass("show");
+          });
+		   if (document.createEvent) { // W3C
+			var ev = document.createEvent('Event');
+			ev.initEvent('resize', true, true);
+			window.dispatchEvent(ev);
+		  }
+		  else { // IE
+			element = document.documentElement;
+			var event = document.createEventObject();
+			element.fireEvent("onresize", event);
+		  }
+        }
+        if(window.addEventListener){
+            window.addEventListener('load', handleSidebar)
+        }else{
+            window.attachEvent('onload', handleSidebar)
+        }
+      </script>
+  </body>
 </html>
