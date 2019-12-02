@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { login } from "../actions/auth";
 
@@ -31,7 +31,7 @@ class LoginPage extends React.Component {
     }
 
     render() {
-        if (this.props.isAuthenticated) {
+        if (this.props.isAuthenticated && ( this.props.role === null || this.props.role !== "CUSTOMER")) {
             return <Redirect to="/dashboard/home" />;
         }
         const errors = this.props.errors;
@@ -87,10 +87,10 @@ class LoginPage extends React.Component {
                             >
                                 Login
                             </button>
-                            {/* <p>
+                            <p>
                                 Don't have an account{" "}
                                 <Link to="/register">Sign Up</Link>
-                            </p> */}
+                            </p>
                         </div>
                     </div>
                 </div>
