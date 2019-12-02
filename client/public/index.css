@@ -407,8 +407,8 @@ table {
 }
 #content-area .cards .card .product-img-list {
     display: block;
-    width: 45%;
-    min-height: 60%;
+    width: 155px;
+    min-height: 118px;
     border-radius: 50%;
     margin: 0 auto;
 }

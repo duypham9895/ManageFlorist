@@ -32,6 +32,10 @@ class DataCategory extends React.Component {
         // if (this.props.category.loading && categories == null) {
         //     return <Spinner />;
         // }
+        if(categories.length > 0){
+            console.log(categories[0].dateCreate);
+        }
+        
         return this.props.category.loading && categories == null ? (
             <Fragment>
                 <Spinner />
@@ -71,7 +75,7 @@ class DataCategory extends React.Component {
                                                 <td>{ct.name}</td>
                                                 <td>
                                                     {Moment(
-                                                        ct.date_create
+                                                        ct.dateCreate
                                                     ).format("DD-MM-YYYY")}
                                                 </td>
                                                 <td>

@@ -70,6 +70,8 @@ class DataProduct extends React.Component {
         const products = this.props.prod.products;
         const stocks = this.props.inventory.stocks;
 
+        console.log(products);
+
         return (
             <Fragment>
                 <section id="content-area">
@@ -138,7 +140,7 @@ class DataProduct extends React.Component {
                                                 <p className="schools">
                                                     {Moment(
                                                         prd.dateCreate
-                                                    ).format("MMM Do YYYY")}
+                                                    ).format("MMMM Do YYYY")}
                                                 </p>
                                                 <div className="schools">
                                                     <span

@@ -226,7 +226,6 @@ router.get("/", auth, async (req, res) => {
     }
     try {
         const products = await Product.find().sort({ date: -1 });
-
         // Check expired day of product
         for (let product of products) {
             product.dateCreate.setDate(
@@ -241,6 +240,9 @@ router.get("/", auth, async (req, res) => {
                 await product.save();
                 await inventory.save();
             } else {
+                product.dateCreate.setDate(
+                    product.dateCreate.getDate() - product.expired
+                );
                 continue;
             }
         }

@@ -74,7 +74,7 @@ class DataSupplier extends React.Component {
                                                 <td>{sup.email}</td>
                                                 <td>
                                                     {Moment(
-                                                        sup.date_create
+                                                        sup.dateCreate
                                                     ).format("DD-MM-YYYY")}
                                                 </td>
                                                 <td>
