@@ -56,7 +56,15 @@ class Orders extends React.Component {
     render() {
         const orders = this.props.order.carts;
         const discounts = this.props.discount.discounts;
-        // console.log(this.props.order);
+        var qty = 0;
+        var total = 0;
+        if(orders.length > 0){
+            let order;
+            for(order of orders){
+                qty += parseInt(order.qty);
+                total +=  parseInt(order.product.sellingPrice * order.qty);
+            }
+        }
         return (
             <Fragment>
                 <section id="content-area">
@@ -211,6 +219,18 @@ class Orders extends React.Component {
                                         })}
                                     </tbody>
                                 )}
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>Total = </td>
+                                        <td>{qty}</td>
+                                        <td>{total}</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>

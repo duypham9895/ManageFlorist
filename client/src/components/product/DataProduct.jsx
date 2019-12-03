@@ -69,9 +69,6 @@ class DataProduct extends React.Component {
     render() {
         const products = this.props.prod.products;
         const stocks = this.props.inventory.stocks;
-
-        console.log(products);
-
         return (
             <Fragment>
                 <section id="content-area">
