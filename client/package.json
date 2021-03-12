@@ -7,7 +7,7 @@
         "canvasjs": "^1.8.1",
         "config": "^3.2.3",
         "dotenv": "^8.2.0",
-        "jspdf": "^1.5.3",
+        "jspdf": "^2.3.1",
         "moment": "^2.24.0",
         "react": "^16.9.0",
         "react-awesome-modal": "^2.0.5",
